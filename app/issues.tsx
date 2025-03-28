@@ -24,16 +24,14 @@ export default function Issues() {
 
   const { loading, error, data } = useQuery(SEARCH_ISSUES, {
     variables: {
-      // query: `repo:facebook/react-native is:issue state:${status} ${search}`,
-      query: `repo:facebook/react-native is:issue`,
+      query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
     },
-    skip: !search,
+    // skip: !search,
   });
-
-  console.log(data);
   
 
   const issues = data?.search?.edges?.map((edge: any) => edge.node) || [];
+  
 
   const renderIssue = ({ item }: { item: Issue }) => (
     <TouchableOpacity
@@ -77,12 +75,16 @@ export default function Issues() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={issues}
-        renderItem={renderIssue}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
+      {issues.length === 0 ? (
+        <Text style={styles.errorText}>No issues found</Text>
+      ) : (
+        <FlatList
+          data={issues}
+          renderItem={renderIssue}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
     </View>
   );
 }
