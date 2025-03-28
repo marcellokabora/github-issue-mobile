@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TextStyle } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TextStyle, TouchableOpacity } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../lib/queries";
 import Markdown from "react-native-markdown-display";
+import { useState } from "react";
 
 interface Comment {
   id: string;
@@ -26,25 +27,80 @@ interface IssueDetail {
     avatarUrl: string;
   };
   comments: {
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string;
+    };
     edges: Array<{
       node: Comment;
     }>;
+  };
+  commentsCount: {
+    totalCount: number;
   };
 }
 
 export default function IssueDetail() {
   const { id } = useLocalSearchParams();
+  const [commentPageInfo, setCommentPageInfo] = useState<{ hasNextPage: boolean; endCursor: string } | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const { loading, error, data } = useQuery(GET_ISSUE_DETAIL, {
+  const { loading, error, data, fetchMore } = useQuery(GET_ISSUE_DETAIL, {
     variables: {
       owner: "facebook",
       name: "react-native",
       number: parseInt(id as string),
+      first: 5,
     },
     skip: !id,
+    onCompleted: (data) => {
+      setCommentPageInfo(data.repository.issue.comments.pageInfo);
+    },
   });
 
-  if (loading) {
+  const loadMoreComments = async () => {
+    if (isLoadingMore || !commentPageInfo?.hasNextPage || !commentPageInfo?.endCursor) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const result = await fetchMore({
+        variables: {
+          owner: "facebook",
+          name: "react-native",
+          number: parseInt(id as string),
+          first: 5,
+          after: commentPageInfo.endCursor,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            repository: {
+              ...prev.repository,
+              issue: {
+                ...prev.repository.issue,
+                comments: {
+                  ...fetchMoreResult.repository.issue.comments,
+                  edges: [
+                    ...prev.repository.issue.comments.edges,
+                    ...fetchMoreResult.repository.issue.comments.edges,
+                  ],
+                },
+              },
+            },
+          };
+        },
+      });
+
+      // Update commentPageInfo with the new cursor and hasNextPage value
+      if (result.data?.repository?.issue?.comments?.pageInfo) {
+        setCommentPageInfo(result.data.repository.issue.comments.pageInfo);
+      }
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  if (loading && !data) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0366d6" />
@@ -98,7 +154,7 @@ export default function IssueDetail() {
 
       <View style={styles.commentsContainer}>
         <Text style={styles.commentsTitle}>
-          {issue.comments.edges.length} {issue.comments.edges.length === 1 ? "comment" : "comments"}
+          {issue.commentsCount.totalCount} {issue.commentsCount.totalCount === 1 ? "comment" : "comments"}
         </Text>
         {issue.comments.edges.map(({ node: comment }) => (
           <View key={comment.id} style={styles.comment}>
@@ -111,6 +167,21 @@ export default function IssueDetail() {
             <Markdown style={markdownStyles}>{comment.body}</Markdown>
           </View>
         ))}
+        
+        {commentPageInfo?.hasNextPage && (
+          <View style={styles.loadMoreContainer}>
+            {isLoadingMore ? (
+              <ActivityIndicator size="small" color="#0366d6" />
+            ) : (
+              <TouchableOpacity
+                style={styles.loadMoreButton}
+                onPress={loadMoreComments}
+              >
+                <Text style={styles.loadMoreText}>Load More Comments</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -203,7 +274,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
-}); 
+  loadMoreContainer: {
+    padding: 16,
+    alignItems: "center",
+  },
+  loadMoreButton: {
+    padding: 12,
+    backgroundColor: "#f6f8fa",
+    borderRadius: 8,
+    minWidth: 120,
+    alignItems: "center",
+  },
+  loadMoreText: {
+    color: "#0366d6",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+});
 
 const markdownStyles: Record<string, TextStyle> = {
   body: {

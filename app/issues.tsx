@@ -27,6 +27,7 @@ export default function Issues() {
   const { search, status } = useLocalSearchParams();
   const router = useRouter();
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const { loading, error, data, fetchMore } = useQuery(SEARCH_ISSUES, {
     variables: {
@@ -41,9 +42,12 @@ export default function Issues() {
 
   const issues = data?.search?.edges?.map((edge: any) => edge.node) || [];
 
-  const loadMore = () => {
-    if (!loading && pageInfo?.hasNextPage) {
-      fetchMore({
+  const loadMore = async () => {
+    if (isLoadingMore || !pageInfo?.hasNextPage || !pageInfo?.endCursor) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const result = await fetchMore({
         variables: {
           query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
           first: 10,
@@ -51,6 +55,7 @@ export default function Issues() {
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
+          
           return {
             search: {
               ...prev.search,
@@ -60,6 +65,13 @@ export default function Issues() {
           };
         },
       });
+
+      // Update pageInfo with the new cursor and hasNextPage value
+      if (result.data?.search?.pageInfo) {
+        setPageInfo(result.data.search.pageInfo);
+      }
+    } finally {
+      setIsLoadingMore(false);
     }
   };
 
@@ -92,7 +104,7 @@ export default function Issues() {
     
     return (
       <View style={styles.footer}>
-        {loading ? (
+        {isLoadingMore ? (
           <ActivityIndicator size="small" color="#0366d6" />
         ) : (
           <TouchableOpacity
