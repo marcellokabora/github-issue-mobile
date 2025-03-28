@@ -1,8 +1,8 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { SEARCH_ISSUES } from "./lib/queries";
+import { useState } from "react";
 
 interface Issue {
   id: string;
@@ -18,20 +18,50 @@ interface Issue {
   };
 }
 
+interface PageInfo {
+  hasNextPage: boolean;
+  endCursor: string;
+}
+
 export default function Issues() {
   const { search, status } = useLocalSearchParams();
   const router = useRouter();
+  const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
 
-  const { loading, error, data } = useQuery(SEARCH_ISSUES, {
+  const { loading, error, data, fetchMore } = useQuery(SEARCH_ISSUES, {
     variables: {
       query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
+      first: 10,
     },
     skip: !search,
+    onCompleted: (data) => {
+      setPageInfo(data.search.pageInfo);
+    },
   });
-  
 
   const issues = data?.search?.edges?.map((edge: any) => edge.node) || [];
-  
+
+  const loadMore = () => {
+    if (!loading && pageInfo?.hasNextPage) {
+      fetchMore({
+        variables: {
+          query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
+          first: 10,
+          after: pageInfo.endCursor,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            search: {
+              ...prev.search,
+              pageInfo: fetchMoreResult.search.pageInfo,
+              edges: [...prev.search.edges, ...fetchMoreResult.search.edges],
+            },
+          };
+        },
+      });
+    }
+  };
 
   const renderIssue = ({ item }: { item: Issue }) => (
     <TouchableOpacity
@@ -57,7 +87,26 @@ export default function Issues() {
     </TouchableOpacity>
   );
 
-  if (loading) {
+  const renderFooter = () => {
+    if (!pageInfo?.hasNextPage) return null;
+    
+    return (
+      <View style={styles.footer}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#0366d6" />
+        ) : (
+          <TouchableOpacity
+            style={styles.loadMoreButton}
+            onPress={loadMore}
+          >
+            <Text style={styles.loadMoreText}>Load More</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  if (loading && issues.length === 0) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0366d6" />
@@ -83,6 +132,9 @@ export default function Issues() {
           renderItem={renderIssue}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
+          ListFooterComponent={renderFooter}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
         />
       )}
     </View>
@@ -141,5 +193,21 @@ const styles = StyleSheet.create({
     color: "#d73a49",
     textAlign: "center",
     marginTop: 20,
+  },
+  footer: {
+    padding: 16,
+    alignItems: "center",
+  },
+  loadMoreButton: {
+    padding: 12,
+    backgroundColor: "#f6f8fa",
+    borderRadius: 8,
+    minWidth: 120,
+    alignItems: "center",
+  },
+  loadMoreText: {
+    color: "#0366d6",
+    fontSize: 14,
+    fontWeight: "600",
   },
 }); 

@@ -11,11 +11,12 @@ export default function Index() {
 
   const handleSearch = () => {
     if (!searchTerm.trim()) return;
-    // setIsLoading(true);
+    setIsLoading(true);
     router.push({
       pathname: "/issues",
       params: { search: searchTerm, status }
     });
+    setIsLoading(false);
   };
 
   return (
@@ -64,7 +65,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 80,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -77,6 +78,8 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     gap: 15,
+    minWidth: "100%",
+
   },
   input: {
     borderWidth: 1,
