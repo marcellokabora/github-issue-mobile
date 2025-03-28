@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TextStyle } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../lib/queries";
+import Markdown from "react-native-markdown-display";
 
 interface Comment {
   id: string;
@@ -92,7 +93,7 @@ export default function IssueDetail() {
       </View>
 
       <View style={styles.bodyContainer}>
-        <Text style={styles.body}>{issue.body}</Text>
+        <Markdown style={markdownStyles}>{issue.body}</Markdown>
       </View>
 
       <View style={styles.commentsContainer}>
@@ -107,7 +108,7 @@ export default function IssueDetail() {
                 {new Date(comment.createdAt).toLocaleDateString()}
               </Text>
             </View>
-            <Text style={styles.commentBody}>{comment.body}</Text>
+            <Markdown style={markdownStyles}>{comment.body}</Markdown>
           </View>
         ))}
       </View>
@@ -170,10 +171,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#e1e4e8",
   },
-  body: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
   commentsContainer: {
     padding: 16,
   },
@@ -200,10 +197,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#586069",
   },
-  commentBody: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
   errorText: {
     fontSize: 16,
     color: "#d73a49",
@@ -211,3 +204,55 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 }); 
+
+const markdownStyles: Record<string, TextStyle> = {
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#24292e",
+  },
+  heading1: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginVertical: 16,
+    color: "#24292e",
+  },
+  heading2: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 14,
+    color: "#24292e",
+  },
+  heading3: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginVertical: 12,
+    color: "#24292e",
+  },
+  paragraph: {
+    marginVertical: 8,
+  },
+  link: {
+    color: "#0366d6",
+    textDecorationLine: "underline" as const,
+  },
+  list: {
+    marginVertical: 8,
+    paddingLeft: 16,
+  },
+  listItem: {
+    marginVertical: 4,
+  },
+  code: {
+    backgroundColor: "#f6f8fa",
+    padding: 4,
+    borderRadius: 4,
+    fontFamily: "monospace",
+  },
+  codeBlock: {
+    backgroundColor: "#f6f8fa",
+    padding: 16,
+    borderRadius: 4,
+    marginVertical: 8,
+  },
+};

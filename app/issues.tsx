@@ -26,7 +26,7 @@ export default function Issues() {
     variables: {
       query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
     },
-    // skip: !search,
+    skip: !search,
   });
   
 
