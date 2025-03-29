@@ -29,7 +29,7 @@ export default function IssuesList() {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const flatListRef = useRef<FlatList>(null);
-  const query = `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`;
+  const query = `repo:facebook/react-native is:issue ${search} ${(!status || status === "OPEN") ? "state:open" : "state:closed"}`;
 
   // Reset view when search or status changes
   useEffect(() => {
@@ -93,17 +93,11 @@ export default function IssuesList() {
     >
       <View style={styles.issueHeader}>
         <Text style={styles.issueNumber}>#{item.number}</Text>
-        <View style={[
-          styles.statusBadge,
-          { backgroundColor: item.state === "OPEN" ? "#28a745" : "#d73a49" }
-        ]}>
-          <Text style={styles.statusText}>{item.state}</Text>
-        </View>
-      </View>
-      <Text style={styles.issueTitle}>{item.title}</Text>
       <Text style={styles.issueDate}>
         {new Date(item.createdAt).toLocaleDateString()}
       </Text>
+      </View>
+      <Text style={styles.issueTitle}>{item.title}</Text>
     </Pressable>
   );
 
@@ -142,7 +136,13 @@ export default function IssuesList() {
     );
   }
 
-  if (!search) return null;
+  if (!search) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>GitHub Issues</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -174,6 +174,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  emptyText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#24292e",
+  },
   listContainer: {
     padding: 16,
   },
@@ -191,11 +202,6 @@ const styles = StyleSheet.create({
   issueNumber: {
     fontSize: 14,
     color: "#586069",
-  },
-  statusBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
   },
   statusText: {
     color: "#fff",

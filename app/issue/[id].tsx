@@ -1,20 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../lib/queries";
 import IssueDetailsInfo from "../components/IssueDetailsInfo";
 import CommentsList from "../components/CommentsList";
-import { useState } from "react";
-
-interface Comment {
-  id: string;
-  body: string;
-  author: {
-    login: string;
-    avatarUrl: string;
-  };
-  createdAt: string;
-}
 
 interface IssueDetail {
   id: string;
@@ -26,9 +15,6 @@ interface IssueDetail {
   author: {
     login: string;
     avatarUrl: string;
-  };
-  commentsCount: {
-    totalCount: number;
   };
 }
 
@@ -74,11 +60,6 @@ export default function IssueDetailScreen() {
   return (
     <ScrollView style={styles.container}>
       <IssueDetailsInfo issue={issue} />
-      <View style={styles.commentsHeader}>
-        <Text style={styles.commentsTitle}>
-          {issue.commentsCount.totalCount} {issue.commentsCount.totalCount === 1 ? "comment" : "comments"}
-        </Text>
-      </View>
       <CommentsList issueNumber={issueNumber} />
     </ScrollView>
   );
@@ -99,14 +80,5 @@ const styles = StyleSheet.create({
     color: "#d73a49",
     textAlign: "center",
     marginTop: 20,
-  },
-  commentsHeader: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e1e4e8",
-  },
-  commentsTitle: {
-    fontSize: 18,
-    fontWeight: "600",
   },
 });

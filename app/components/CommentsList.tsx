@@ -21,6 +21,9 @@ interface CommentsListProps {
 interface CommentsData {
   repository: {
     issue: {
+      commentsCount: {
+        totalCount: number;
+      };
       comments: {
         pageInfo: {
           hasNextPage: boolean;
@@ -34,17 +37,21 @@ interface CommentsData {
   };
 }
 
+
 export default function CommentsList({ issueNumber }: CommentsListProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [pageInfo, setPageInfo] = useState<{ hasNextPage: boolean; endCursor: string } | null>(null);
   const [comments, setComments] = useState<Array<{ node: Comment }>>([]);
+  const COMMENTS_QUERY = {
+    owner: "facebook",
+    name: "react-native",
+    first: 5,
+    number: issueNumber,
+  };
 
   const { loading, error, data, fetchMore } = useQuery<CommentsData>(GET_ISSUE_COMMENTS, {
     variables: {
-      owner: "facebook",
-      name: "react-native",
-      number: issueNumber,
-      first: 5,
+      ...COMMENTS_QUERY,
     },
     skip: !issueNumber,
     onCompleted: (data) => {
@@ -62,10 +69,7 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
     try {
       const result = await fetchMore({
         variables: {
-          owner: "facebook",
-          name: "react-native",
-          number: issueNumber,
-          first: 5,
+          ...COMMENTS_QUERY,
           after: pageInfo.endCursor,
         },
       });
@@ -96,8 +100,15 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
     );
   }
 
+  const totalCount = data?.repository?.issue?.commentsCount?.totalCount || 0;
+
   return (
     <View style={styles.container}>
+      <View style={styles.commentsHeader}>
+        <Text style={styles.commentsTitle}>
+          {totalCount} {totalCount === 1 ? "comment" : "comments"}
+        </Text>
+      </View>
       {comments.map(({ node: comment }) => (
         <View key={comment.id} style={styles.comment}>
           <View style={styles.commentHeader}>
@@ -142,15 +153,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
+  commentsHeader: {
+    paddingBottom: 16,
+  },
   commentsTitle: {
     fontSize: 18,
     fontWeight: "600",
-    marginBottom: 16,
   },
   comment: {
-    padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#e1e4e8",
+    paddingTop: 16,
   },
   commentHeader: {
     flexDirection: "row",

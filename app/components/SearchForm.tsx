@@ -1,106 +1,127 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { useState, useEffect } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState, useEffect, useRef } from "react";
 import { ISSUE_STATUS, IssueStatus } from "../lib/constants";
 
 export default function SearchForm() {
   const router = useRouter();
-  const searchParams = useLocalSearchParams();
-  const [searchTerm, setSearchTerm] = useState(searchParams.search as string || "");
-  const [status, setStatus] = useState<IssueStatus>((searchParams.status as IssueStatus) || ISSUE_STATUS.OPEN);
-  const [isLoading, setIsLoading] = useState(false);
+  const { search, status } = useLocalSearchParams();
+  const [searchText, setSearchText] = useState(search as string || "");
+
+  useEffect(() => {
+    setSearchText(search as string || "");
+  }, [search]);
 
   const handleSearch = () => {
-    if (!searchTerm.trim()) return;
-    
-    setIsLoading(true);
     router.setParams({
-      search: searchTerm.trim(),
-      status
+      search: searchText.trim(),
+      status: status || ISSUE_STATUS.OPEN
     });
-    setIsLoading(false);
   };
 
   const handleStatusChange = (newStatus: IssueStatus) => {
-    setStatus(newStatus);
-    if (searchTerm.trim()) {
-      setIsLoading(true);
-      router.setParams({
-        search: searchTerm.trim(),
-        status: newStatus
-      });
-      setIsLoading(false);
-    }
+    router.setParams({
+      search: searchText.trim(),
+      status: newStatus
+    });
   };
 
-  // Update local state when URL params change
-  useEffect(() => {
-    if (searchParams.status) {
-      setStatus(searchParams.status as IssueStatus);
-    }
-    if (searchParams.search) {
-      setSearchTerm(searchParams.search as string);
-    }
-  }, [searchParams.status, searchParams.search]);
+  const handleReset = () => {
+    setSearchText("");
+    router.setParams({
+      search: "",
+      status: ISSUE_STATUS.OPEN
+    });
+  };
 
   return (
-    <View style={styles.searchContainer}>
-      <TextInput
-        style={styles.input}
-        placeholder="Search issues..."
-        value={searchTerm}
-        onChangeText={setSearchTerm}
-        onKeyPress={(e) => {
-          if (e.nativeEvent.key === "Enter") {
-            handleSearch();
-          }
-        }}
-      />
-      
-      <View style={styles.statusContainer}>
+    <View style={styles.container}>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search issues..."
+          value={searchText}
+          onChangeText={setSearchText}
+          onSubmitEditing={handleSearch}
+          returnKeyType="search"
+        />
         <TouchableOpacity
-          style={[styles.statusButton, status === ISSUE_STATUS.OPEN && styles.activeStatusOpen]}
-          onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
+          style={styles.searchButton}
+          onPress={handleSearch}
         >
-          <Text style={[styles.statusText, status === ISSUE_STATUS.OPEN && styles.activeStatusText]}>Open</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.statusButton, status === ISSUE_STATUS.CLOSED && styles.activeStatusClosed]}
-          onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
-        >
-          <Text style={[styles.statusText, status === ISSUE_STATUS.CLOSED && styles.activeStatusText]}>Closed</Text>
+          <Text style={styles.searchButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.searchButton}
-        onPress={handleSearch}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.searchButtonText}>Search</Text>
-        )}
-      </TouchableOpacity>
+      <View style={styles.statusContainer}>
+        <TouchableOpacity
+          style={[
+            styles.statusButton,
+            (!status || status === ISSUE_STATUS.OPEN) && styles.activeStatusOpen,
+          ]}
+          onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
+        >
+          <Text
+            style={[
+              styles.statusText,
+              (!status || status === ISSUE_STATUS.OPEN) && styles.activeStatusText,
+            ]}
+          >
+            Open
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.statusButton,
+            status === ISSUE_STATUS.CLOSED && styles.activeStatusClosed,
+          ]}
+          onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
+        >
+          <Text
+            style={[
+              styles.statusText,
+              status === ISSUE_STATUS.CLOSED && styles.activeStatusText,
+            ]}
+          >
+            Closed
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  searchContainer: {
+  container: {
     padding: 16,
     backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#e1e4e8",
   },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+  },
   input: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#e1e4e8",
     borderRadius: 6,
     padding: 8,
-    marginBottom: 12,
     fontSize: 16,
+    marginRight: 8,
+  },
+  searchButton: {
+    backgroundColor: "#0366d6",
+    padding: 8,
+    borderRadius: 6,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  searchButtonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
   },
   statusContainer: {
     flexDirection: "row",
@@ -120,23 +141,12 @@ const styles = StyleSheet.create({
   activeStatusClosed: {
     backgroundColor: "#d73a49",
   },
-  statusText: {
-    fontSize: 14,
-    color: "#586069",
-  },
   activeStatusText: {
     color: "#fff",
     fontWeight: "600",
   },
-  searchButton: {
-    backgroundColor: "#0366d6",
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  searchButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
+  statusText: {
+    fontSize: 14,
+    color: "#586069",
   },
 }); 

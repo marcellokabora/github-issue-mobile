@@ -13,12 +13,6 @@ export default function Layout() {
           }}
         />
         <Stack.Screen
-          name="issues"
-          options={{
-            title: "Search Results",
-          }}
-        />
-        <Stack.Screen
           name="issue/[id]"
           options={{
             title: "Issue Details",

@@ -42,9 +42,6 @@ export const GET_ISSUE_DETAIL = gql`
           login
           avatarUrl
         }
-        commentsCount: comments {
-          totalCount
-        }
       }
     }
   }
@@ -54,6 +51,9 @@ export const GET_ISSUE_COMMENTS = gql`
   query GetIssueComments($owner: String!, $name: String!, $number: Int!, $first: Int!, $after: String) {
     repository(owner: $owner, name: $name) {
       issue(number: $number) {
+        commentsCount: comments {
+          totalCount
+        }
         comments(first: $first, after: $after) {
           pageInfo {
             hasNextPage
