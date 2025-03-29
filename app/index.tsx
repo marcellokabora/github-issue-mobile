@@ -22,13 +22,18 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>GitHub Issues</Text>
-      
+
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
           placeholder="Search issues..."
           value={searchTerm}
           onChangeText={setSearchTerm}
+          onKeyPress={(e) => {
+            if (e.nativeEvent.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         
         <View style={styles.statusContainer}>

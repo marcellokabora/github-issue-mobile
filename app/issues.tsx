@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Pressable } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { SEARCH_ISSUES } from "./lib/queries";
@@ -28,10 +28,11 @@ export default function Issues() {
   const router = useRouter();
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const query  = `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`;
 
   const { loading, error, data, fetchMore } = useQuery(SEARCH_ISSUES, {
     variables: {
-      query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
+      query,
       first: 10,
     },
     skip: !search,
@@ -49,7 +50,7 @@ export default function Issues() {
     try {
       const result = await fetchMore({
         variables: {
-          query: `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`,
+          query,
           first: 10,
           after: pageInfo.endCursor,
         },
@@ -76,7 +77,7 @@ export default function Issues() {
   };
 
   const renderIssue = ({ item }: { item: Issue }) => (
-    <TouchableOpacity
+    <Pressable
       style={styles.issueItem}
       onPress={() => router.push({
         pathname: "/issue/[id]",
@@ -96,7 +97,7 @@ export default function Issues() {
       <Text style={styles.issueDate}>
         {new Date(item.createdAt).toLocaleDateString()}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   const renderFooter = () => {

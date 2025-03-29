@@ -50,7 +50,7 @@ export default function IssueDetail() {
       owner: "facebook",
       name: "react-native",
       number: parseInt(id as string),
-      first: 5,
+      first: 10,
     },
     skip: !id,
     onCompleted: (data) => {
@@ -68,7 +68,7 @@ export default function IssueDetail() {
           owner: "facebook",
           name: "react-native",
           number: parseInt(id as string),
-          first: 5,
+          first: 10,
           after: commentPageInfo.endCursor,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   commentsTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     marginBottom: 16,
   },
