@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_COMMENTS } from "../lib/queries";
 import Markdown from "react-native-markdown-display";
 import { useState } from "react";
+import { commonStyles, colors, markdownStyles } from "../styles";
 
 interface Comment {
   id: string;
@@ -36,7 +37,6 @@ interface CommentsData {
     };
   };
 }
-
 
 export default function CommentsList({ issueNumber }: CommentsListProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -86,16 +86,16 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
 
   if (loading && !data) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0366d6" />
+      <View style={commonStyles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Error: {error.message}</Text>
+      <View style={commonStyles.container}>
+        <Text style={commonStyles.errorText}>Error: {error.message}</Text>
       </View>
     );
   }
@@ -103,147 +103,40 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
   const totalCount = data?.repository?.issue?.commentsCount?.totalCount || 0;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.commentsHeader}>
-        <Text style={styles.commentsTitle}>
+    <View style={commonStyles.container}>
+      <View style={commonStyles.header}>
+        <Text style={commonStyles.subtitle}>
           {totalCount} {totalCount === 1 ? "comment" : "comments"}
         </Text>
       </View>
       {comments.map(({ node: comment }) => (
-        <View key={comment.id} style={styles.comment}>
-          <View style={styles.commentHeader}>
-            <Text style={styles.commentAuthor}>{comment.author.login}</Text>
-            <Text style={styles.commentDate}>
+        <View key={comment.id} style={commonStyles.listItem}>
+          <View style={commonStyles.commentHeader}>
+            <Text style={commonStyles.textPrimary}>{comment.author.login}</Text>
+            <Text style={commonStyles.textSecondary}>
               {new Date(comment.createdAt).toLocaleDateString()}
             </Text>
           </View>
-          <Markdown style={markdownStyles}>{comment.body}</Markdown>
+          <View style={commonStyles.commentBody}>
+            <Markdown style={markdownStyles}>{comment.body}</Markdown>
+          </View>
         </View>
       ))}
 
       {pageInfo?.hasNextPage && (
-        <View style={styles.loadMoreContainer}>
+        <View style={[commonStyles.listItem, { borderBottomWidth: 0 }]}>
           {isLoadingMore ? (
-            <ActivityIndicator size="small" color="#0366d6" />
+            <ActivityIndicator size="small" color={colors.primary} />
           ) : (
             <TouchableOpacity
-              style={styles.loadMoreButton}
+              style={commonStyles.button}
               onPress={loadMoreComments}
             >
-              <Text style={styles.loadMoreText}>Load More Comments</Text>
+              <Text style={commonStyles.buttonText}>Load More Comments</Text>
             </TouchableOpacity>
           )}
         </View>
       )}
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  loadingContainer: {
-    padding: 16,
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 16,
-    color: "#d73a49",
-    textAlign: "center",
-    marginTop: 20,
-  },
-  commentsHeader: {
-    paddingBottom: 16,
-  },
-  commentsTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  comment: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#e1e4e8",
-    paddingTop: 16,
-  },
-  commentHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  commentAuthor: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  commentDate: {
-    fontSize: 12,
-    color: "#586069",
-  },
-  loadMoreContainer: {
-    padding: 16,
-    alignItems: "center",
-  },
-  loadMoreButton: {
-    padding: 12,
-    backgroundColor: "#f6f8fa",
-    borderRadius: 8,
-    minWidth: 120,
-    alignItems: "center",
-  },
-  loadMoreText: {
-    color: "#0366d6",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});
-
-const markdownStyles = {
-  body: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: "#24292e",
-  },
-  heading1: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginVertical: 16,
-    color: "#24292e",
-  },
-  heading2: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginVertical: 14,
-    color: "#24292e",
-  },
-  heading3: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 12,
-    color: "#24292e",
-  },
-  paragraph: {
-    marginVertical: 8,
-  },
-  link: {
-    color: "#0366d6",
-    textDecorationLine: "underline" as const,
-  },
-  list: {
-    marginVertical: 8,
-    paddingLeft: 16,
-  },
-  listItem: {
-    marginVertical: 4,
-  },
-  code: {
-    backgroundColor: "#f6f8fa",
-    padding: 4,
-    borderRadius: 4,
-    fontFamily: "monospace",
-  },
-  codeBlock: {
-    backgroundColor: "#f6f8fa",
-    padding: 16,
-    borderRadius: 4,
-    marginVertical: 8,
-  },
-}; 
+} 
