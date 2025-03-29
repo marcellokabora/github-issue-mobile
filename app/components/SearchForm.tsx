@@ -1,6 +1,6 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ISSUE_STATUS, IssueStatus } from "../lib/constants";
 
 export default function SearchForm() {
@@ -23,14 +23,6 @@ export default function SearchForm() {
     router.setParams({
       search: searchText.trim(),
       status: newStatus
-    });
-  };
-
-  const handleReset = () => {
-    setSearchText("");
-    router.setParams({
-      search: "",
-      status: ISSUE_STATUS.OPEN
     });
   };
 

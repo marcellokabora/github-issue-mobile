@@ -64,7 +64,7 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
 
   const loadMoreComments = async () => {
     if (isLoadingMore || !pageInfo?.hasNextPage || !pageInfo?.endCursor) return;
-    
+
     setIsLoadingMore(true);
     try {
       const result = await fetchMore({
@@ -120,7 +120,7 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
           <Markdown style={markdownStyles}>{comment.body}</Markdown>
         </View>
       ))}
-      
+
       {pageInfo?.hasNextPage && (
         <View style={styles.loadMoreContainer}>
           {isLoadingMore ? (

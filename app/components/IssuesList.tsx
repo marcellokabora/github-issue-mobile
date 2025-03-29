@@ -53,7 +53,7 @@ export default function IssuesList() {
 
   const loadMore = async () => {
     if (isLoadingMore || !pageInfo?.hasNextPage || !pageInfo?.endCursor) return;
-    
+
     setIsLoadingMore(true);
     try {
       const result = await fetchMore({
@@ -64,7 +64,7 @@ export default function IssuesList() {
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
-          
+
           return {
             search: {
               ...prev.search,
@@ -93,9 +93,9 @@ export default function IssuesList() {
     >
       <View style={styles.issueHeader}>
         <Text style={styles.issueNumber}>#{item.number}</Text>
-      <Text style={styles.issueDate}>
-        {new Date(item.createdAt).toLocaleDateString()}
-      </Text>
+        <Text style={styles.issueDate}>
+          {new Date(item.createdAt).toLocaleDateString()}
+        </Text>
       </View>
       <Text style={styles.issueTitle}>{item.title}</Text>
     </Pressable>
@@ -103,7 +103,7 @@ export default function IssuesList() {
 
   const renderFooter = () => {
     if (!pageInfo?.hasNextPage) return null;
-    
+
     return (
       <View style={styles.footer}>
         {isLoadingMore ? (
