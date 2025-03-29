@@ -1,8 +1,8 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Pressable } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { SEARCH_ISSUES } from "../lib/queries";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Issue {
   id: string;
@@ -23,16 +23,20 @@ interface PageInfo {
   endCursor: string;
 }
 
-interface IssuesListProps {
-  search: string;
-  status: string;
-}
-
-export default function IssuesList({ search, status }: IssuesListProps) {
+export default function IssuesList() {
   const router = useRouter();
+  const { search, status } = useLocalSearchParams();
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
   const query = `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`;
+
+  // Reset view when search or status changes
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({ offset: 0, animated: false });
+    }
+  }, [search, status]);
 
   const { loading, error, data, fetchMore } = useQuery(SEARCH_ISSUES, {
     variables: {
@@ -138,12 +142,15 @@ export default function IssuesList({ search, status }: IssuesListProps) {
     );
   }
 
+  if (!search) return null;
+
   return (
     <View style={styles.container}>
       {issues.length === 0 ? (
         <Text style={styles.errorText}>No issues found</Text>
       ) : (
         <FlatList
+          ref={flatListRef}
           data={issues}
           renderItem={renderIssue}
           keyExtractor={(item) => item.id}

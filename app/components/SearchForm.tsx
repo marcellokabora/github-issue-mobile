@@ -1,12 +1,13 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
+import { ISSUE_STATUS, IssueStatus } from "../lib/constants";
 
 export default function SearchForm() {
   const router = useRouter();
   const searchParams = useLocalSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.search as string || "");
-  const [status, setStatus] = useState<"OPEN" | "CLOSED">((searchParams.status as "OPEN" | "CLOSED") || "OPEN");
+  const [status, setStatus] = useState<IssueStatus>((searchParams.status as IssueStatus) || ISSUE_STATUS.OPEN);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = () => {
@@ -20,7 +21,7 @@ export default function SearchForm() {
     setIsLoading(false);
   };
 
-  const handleStatusChange = (newStatus: "OPEN" | "CLOSED") => {
+  const handleStatusChange = (newStatus: IssueStatus) => {
     setStatus(newStatus);
     if (searchTerm.trim()) {
       setIsLoading(true);
@@ -35,7 +36,7 @@ export default function SearchForm() {
   // Update local state when URL params change
   useEffect(() => {
     if (searchParams.status) {
-      setStatus(searchParams.status as "OPEN" | "CLOSED");
+      setStatus(searchParams.status as IssueStatus);
     }
     if (searchParams.search) {
       setSearchTerm(searchParams.search as string);
@@ -58,16 +59,16 @@ export default function SearchForm() {
       
       <View style={styles.statusContainer}>
         <TouchableOpacity
-          style={[styles.statusButton, status === "OPEN" && styles.activeStatusOpen]}
-          onPress={() => handleStatusChange("OPEN")}
+          style={[styles.statusButton, status === ISSUE_STATUS.OPEN && styles.activeStatusOpen]}
+          onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
         >
-          <Text style={[styles.statusText, status === "OPEN" && styles.activeStatusText]}>Open</Text>
+          <Text style={[styles.statusText, status === ISSUE_STATUS.OPEN && styles.activeStatusText]}>Open</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.statusButton, status === "CLOSED" && styles.activeStatusClosed]}
-          onPress={() => handleStatusChange("CLOSED")}
+          style={[styles.statusButton, status === ISSUE_STATUS.CLOSED && styles.activeStatusClosed]}
+          onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
         >
-          <Text style={[styles.statusText, status === "CLOSED" && styles.activeStatusText]}>Closed</Text>
+          <Text style={[styles.statusText, status === ISSUE_STATUS.CLOSED && styles.activeStatusText]}>Closed</Text>
         </TouchableOpacity>
       </View>
 
