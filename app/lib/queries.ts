@@ -29,7 +29,7 @@ export const SEARCH_ISSUES = gql`
 `;
 
 export const GET_ISSUE_DETAIL = gql`
-  query GetIssueDetail($owner: String!, $name: String!, $number: Int!, $first: Int = 10, $after: String) {
+  query GetIssueDetail($owner: String!, $name: String!, $number: Int!) {
     repository(owner: $owner, name: $name) {
       issue(number: $number) {
         id
@@ -42,6 +42,18 @@ export const GET_ISSUE_DETAIL = gql`
           login
           avatarUrl
         }
+        commentsCount: comments {
+          totalCount
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ISSUE_COMMENTS = gql`
+  query GetIssueComments($owner: String!, $name: String!, $number: Int!, $first: Int!, $after: String) {
+    repository(owner: $owner, name: $name) {
+      issue(number: $number) {
         comments(first: $first, after: $after) {
           pageInfo {
             hasNextPage
@@ -58,9 +70,6 @@ export const GET_ISSUE_DETAIL = gql`
               }
             }
           }
-        }
-        commentsCount: comments {
-          totalCount
         }
       }
     }
