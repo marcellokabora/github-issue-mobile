@@ -1,7 +1,7 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Pressable } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useQuery } from "@apollo/client";
-import { SEARCH_ISSUES } from "./lib/queries";
+import { SEARCH_ISSUES } from "../lib/queries";
 import { useState } from "react";
 
 interface Issue {
@@ -23,12 +23,16 @@ interface PageInfo {
   endCursor: string;
 }
 
-export default function Issues() {
-  const { search, status } = useLocalSearchParams();
+interface IssuesListProps {
+  search: string;
+  status: string;
+}
+
+export default function IssuesList({ search, status }: IssuesListProps) {
   const router = useRouter();
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const query  = `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`;
+  const query = `repo:facebook/react-native is:issue ${search} ${status === "OPEN" ? "state:open" : "state:closed"}`;
 
   const { loading, error, data, fetchMore } = useQuery(SEARCH_ISSUES, {
     variables: {
@@ -67,7 +71,6 @@ export default function Issues() {
         },
       });
 
-      // Update pageInfo with the new cursor and hasNextPage value
       if (result.data?.search?.pageInfo) {
         setPageInfo(result.data.search.pageInfo);
       }
