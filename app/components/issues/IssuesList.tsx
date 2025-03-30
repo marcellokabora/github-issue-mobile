@@ -36,6 +36,7 @@ export default function IssuesList() {
         pathname: "/issue/[id]",
         params: { id: item.number }
       })}
+      testID={`issue-item-${item.number}`}
     >
       <View style={layoutStyles.itemHeader}>
         <Text style={textStyles.itemNumber}>#{item.number}</Text>
@@ -53,11 +54,16 @@ export default function IssuesList() {
     return (
       <View style={layoutStyles.footer}>
         {isLoadingMore ? (
-          <ActivityIndicator size="small" color={colors.primary} />
+          <ActivityIndicator
+            size="small"
+            color={colors.primary}
+            testID="loading-more-indicator"
+          />
         ) : (
           <TouchableOpacity
             style={[buttonStyles.base, buttonStyles.secondary]}
             onPress={loadMore}
+            testID="load-more-button"
           >
             <Text style={[buttonStyles.text, buttonStyles.textSecondary]}>Load More</Text>
           </TouchableOpacity>
@@ -67,7 +73,7 @@ export default function IssuesList() {
   };
 
   if (loading && issues.length === 0) {
-    return <LoadingIndicator />;
+    return <LoadingIndicator testID="loading-indicator" />;
   }
 
   if (error) {
@@ -91,6 +97,7 @@ export default function IssuesList() {
           maxToRenderPerBatch={10}
           windowSize={10}
           initialNumToRender={10}
+          testID="issues-list"
         />
       )}
     </View>

@@ -4,12 +4,13 @@ import { textStyles } from "../../styles/typography";
 
 interface ErrorMessageProps {
     message: string;
+    testID?: string;
 }
 
-export default function ErrorMessage({ message }: ErrorMessageProps) {
+export default function ErrorMessage({ message, testID }: ErrorMessageProps) {
     return (
-        <View style={layoutStyles.container}>
-            <Text style={textStyles.error}>Error: {message}</Text>
+        <View style={layoutStyles.container} testID={testID}>
+            <Text style={textStyles.error} testID="error-message">{message}</Text>
         </View>
     );
 } 
