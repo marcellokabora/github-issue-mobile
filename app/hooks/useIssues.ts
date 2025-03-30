@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import { SEARCH_ISSUES } from "../lib/queries";
-import { Issue, PageInfo } from "../types";
+import { PageInfo } from "../types";
 
 export const useIssues = (search: string, status: string) => {
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);

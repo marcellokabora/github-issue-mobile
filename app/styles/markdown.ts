@@ -1,4 +1,4 @@
-import { StyleSheet, TextStyle } from "react-native";
+import { TextStyle } from "react-native";
 import { colors, typography, spacing } from "./theme";
 
 export const markdownStyles: Record<string, TextStyle> = {
