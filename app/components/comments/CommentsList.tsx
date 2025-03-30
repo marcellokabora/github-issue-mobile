@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { layoutStyles } from "../../styles/layout";
 import { textStyles } from "../../styles/typography";
 import { markdownStyles } from "../../styles/markdown";
@@ -23,15 +23,24 @@ export default function CommentsList({ comments, totalCount }: CommentsListProps
 
   return (
     <View style={layoutStyles.container}>
-      <Text style={[textStyles.title, layoutStyles.header, layoutStyles.headerBorder]}>
+      <Text style={[textStyles.title, layoutStyles.header]}>
         {formatCommentCount(totalCount)}
       </Text>
       {comments.map(({ node }) => (
         <View key={node.id} style={layoutStyles.item}>
-          <View style={layoutStyles.itemHeader}>
-            <Text style={textStyles.secondary}>
-              {node.author.login} commented on {formatDate(node.createdAt)}
-            </Text>
+          <View style={layoutStyles.avatarContainer}>
+            <Image
+              source={{ uri: node.author.avatarUrl }}
+              style={layoutStyles.avatar}
+            />
+            <View style={layoutStyles.avatarContent}>
+              <Text style={textStyles.subtitle}>
+                {node.author.login}
+              </Text>
+              <Text style={textStyles.secondary}>
+                {formatDate(node.createdAt)}
+              </Text>
+            </View>
           </View>
           <View style={layoutStyles.itemBody}>
             <Markdown style={markdownStyles}>{node.body}</Markdown>

@@ -1,13 +1,22 @@
 import { useState, useCallback } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ISSUE_COMMENTS } from "../lib/queries";
+import { GET_ISSUE_COMMENTS } from "../graphql/queries";
 import { Comment, CommentsData } from "../types";
 
-export const useComments = (issueNumber: number) => {
+interface UseCommentsReturn {
+    comments: Array<{ node: Comment }>;
+    loading: boolean;
+    error: Error | undefined;
+    pageInfo: { hasNextPage: boolean; endCursor: string } | null;
+    isLoadingMore: boolean;
+    loadMoreComments: () => Promise<void>;
+    totalCount: number;
+}
+
+export const useComments = (issueNumber: number): UseCommentsReturn => {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [pageInfo, setPageInfo] = useState<{ hasNextPage: boolean; endCursor: string } | null>(null);
     const [comments, setComments] = useState<Array<{ node: Comment }>>([]);
-    const [lastLoadTime, setLastLoadTime] = useState(0);
 
     const COMMENTS_QUERY = {
         owner: "facebook",
@@ -30,14 +39,9 @@ export const useComments = (issueNumber: number) => {
     });
 
     const loadMoreComments = useCallback(async () => {
-        // Prevent multiple rapid calls (debounce)
-        const now = Date.now();
-        if (now - lastLoadTime < 1000) return; // 1 second debounce
-
         if (isLoadingMore || !pageInfo?.hasNextPage || !pageInfo?.endCursor) return;
 
         setIsLoadingMore(true);
-        setLastLoadTime(now);
 
         try {
             const result = await fetchMore({
@@ -55,7 +59,7 @@ export const useComments = (issueNumber: number) => {
         } finally {
             setIsLoadingMore(false);
         }
-    }, [isLoadingMore, pageInfo, lastLoadTime, fetchMore]);
+    }, [isLoadingMore, pageInfo, fetchMore]);
 
     return {
         comments,

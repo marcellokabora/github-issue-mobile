@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { ISSUE_STATUS, IssueStatus } from "../../lib/constants";
+import { ISSUE_STATUS, IssueStatus } from "../../utils/constants";
 import { formStyles } from "../../styles/components";
 import { buttonStyles } from "../../styles/components";
 import { layoutStyles } from "../../styles/layout";

@@ -21,7 +21,7 @@ export default function IssuesList() {
     isLoadingMore,
     loadMore,
     flatListRef
-  } = useIssues(search as string, status as string);
+  } = useIssues({ search: search as string, status: status as string });
 
   const handleEndReached = () => {
     if (!isLoadingMore && pageInfo?.hasNextPage) {
@@ -76,7 +76,7 @@ export default function IssuesList() {
 
   return (
     <View style={layoutStyles.container}>
-      {issues.length === 0 ? (
+      {issues.length === 0 && search ? (
         <Text style={textStyles.error}>No issues found</Text>
       ) : (
         <FlatList

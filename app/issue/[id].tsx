@@ -1,7 +1,7 @@
 import { View, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
-import { GET_ISSUE_DETAIL } from "../lib/queries";
+import { GET_ISSUE_DETAIL } from "../graphql/queries";
 import IssueDetailsInfo from "../components/issues/IssueDetailsInfo";
 import CommentsList from "../components/comments/CommentsList";
 import { layoutStyles } from "../styles/layout";

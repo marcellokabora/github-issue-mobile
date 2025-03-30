@@ -15,12 +15,6 @@ export const SEARCH_ISSUES = gql`
             state
             number
             createdAt
-            repository {
-              name
-              owner {
-                login
-              }
-            }
           }
         }
       }

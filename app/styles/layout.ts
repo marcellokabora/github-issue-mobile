@@ -4,7 +4,6 @@ import { colors, spacing } from "./theme";
 export const layoutStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background.primary,
     },
     loadingContainer: {
         flex: 1,
@@ -15,7 +14,6 @@ export const layoutStyles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: colors.background.primary,
     },
     header: {
         padding: spacing.base,
@@ -82,5 +80,20 @@ export const layoutStyles = StyleSheet.create({
     },
     statusBadgeClosed: {
         backgroundColor: colors.error,
+    },
+    // Avatar styles
+    avatarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: spacing.sm,
+    },
+    avatar: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: spacing.sm,
+    },
+    avatarContent: {
+        flex: 1,
     },
 }); 

@@ -4,12 +4,6 @@ export interface Issue {
     state: string;
     number: number;
     createdAt: string;
-    repository: {
-        name: string;
-        owner: {
-            login: string;
-        };
-    };
 }
 
 export interface IssueDetail {

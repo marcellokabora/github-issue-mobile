@@ -8,7 +8,7 @@ import { IssueDetailsInfoProps } from "../../types";
 
 export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (
-    <View style={[layoutStyles.container]}>
+    <View style={[layoutStyles.container, layoutStyles.headerBorder]}>
       <View style={[layoutStyles.header, layoutStyles.headerRow]}>
         <View style={layoutStyles.headerContent}>
           <Text style={[textStyles.secondary, { marginBottom: spacing.xs }]}>#{issue.number}</Text>

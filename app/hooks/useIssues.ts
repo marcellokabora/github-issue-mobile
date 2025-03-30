@@ -1,13 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@apollo/client";
-import { SEARCH_ISSUES } from "../lib/queries";
-import { PageInfo } from "../types";
+import { SEARCH_ISSUES } from "../graphql/queries";
+import { PageInfo, Issue } from "../types";
+import { ISSUE_STATUS } from "../utils/constants";
 
-export const useIssues = (search: string, status: string) => {
+interface UseIssuesProps {
+    search?: string;
+    status?: string;
+}
+
+interface UseIssuesReturn {
+    issues: Issue[];
+    loading: boolean;
+    error: Error | undefined;
+    pageInfo: PageInfo | null;
+    isLoadingMore: boolean;
+    loadMore: () => Promise<void>;
+    flatListRef: React.RefObject<any>;
+}
+
+export const useIssues = ({ search = "", status = ISSUE_STATUS.OPEN }: UseIssuesProps = {}): UseIssuesReturn => {
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const flatListRef = useRef(null);
-    const query = `repo:facebook/react-native is:issue ${search} ${(!status || status === "OPEN") ? "state:open" : "state:closed"}`;
+
+    // Base query parts
+    const baseQuery = "repo:facebook/react-native is:issue";
+    const stateQuery = (!status || status === ISSUE_STATUS.OPEN) ? "state:open" : "state:closed";
+    const sortQuery = "sort:created-desc";
+
+    // Construct the complete query
+    const query = search
+        ? `${baseQuery} ${search} ${stateQuery} ${sortQuery}`
+        : `${baseQuery} ${stateQuery} ${sortQuery}`;
 
     useEffect(() => {
         if (flatListRef.current && 'scrollToOffset' in flatListRef.current) {
@@ -20,9 +45,10 @@ export const useIssues = (search: string, status: string) => {
             query,
             first: 10,
         },
-        skip: !search,
         onCompleted: (data) => {
-            setPageInfo(data.search.pageInfo);
+            if (data?.search?.pageInfo) {
+                setPageInfo(data.search.pageInfo);
+            }
         },
     });
 
