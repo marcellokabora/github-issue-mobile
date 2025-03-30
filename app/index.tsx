@@ -1,24 +1,12 @@
-import { View, StyleSheet } from "react-native";
-import SearchForm from "./components/SearchForm";
-import IssuesList from "./components/IssuesList";
-
+import { View } from "react-native";
+import SearchForm from "./components/issues/SearchForm";
+import IssuesList from "./components/issues/IssuesList";
+import { layoutStyles } from "./styles/layout";
 export default function Home() {
   return (
-    <View style={styles.container}>
+    <View style={layoutStyles.container}>
       <SearchForm />
-      <View style={styles.listContainer}>
-        <IssuesList />
-      </View>
+      <IssuesList />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  listContainer: {
-    flex: 1,
-  },
-});

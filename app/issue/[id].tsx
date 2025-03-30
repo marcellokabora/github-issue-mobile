@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../lib/queries";
-import IssueDetailsInfo from "../components/IssueDetailsInfo";
-import CommentsList from "../components/CommentsList";
+import IssueDetailsInfo from "../components/issues/IssueDetailsInfo";
+import CommentsList from "../components/comments/CommentsList";
+import { layoutStyles } from "../styles/layout";
+import LoadingIndicator from "../components/common/LoadingIndicator";
+import ErrorMessage from "../components/common/ErrorMessage";
 
 interface IssueDetail {
   id: string;
@@ -32,53 +35,23 @@ export default function IssueDetailScreen() {
   });
 
   if (loading && !data) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0366d6" />
-      </View>
-    );
+    return <LoadingIndicator />;
   }
 
   if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Error: {error.message}</Text>
-      </View>
-    );
+    return <ErrorMessage message={error.message} />;
   }
 
   const issue = data?.repository?.issue as IssueDetail | null;
 
   if (!issue) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Issue not found</Text>
-      </View>
-    );
+    return <ErrorMessage message="Issue not found" />;
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={layoutStyles.container}>
       <IssueDetailsInfo issue={issue} />
       <CommentsList issueNumber={issueNumber} />
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 16,
-    color: "#d73a49",
-    textAlign: "center",
-    marginTop: 20,
-  },
-});

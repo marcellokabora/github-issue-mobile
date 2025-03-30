@@ -1,23 +1,10 @@
 import { View, Text } from "react-native";
 import Markdown from "react-native-markdown-display";
-import { layoutStyles, textStyles, markdownStyles, spacing, colors } from "../styles";
-
-interface IssueDetail {
-  id: string;
-  title: string;
-  body: string;
-  state: string;
-  number: number;
-  createdAt: string;
-  author: {
-    login: string;
-    avatarUrl: string;
-  };
-}
-
-interface IssueDetailsInfoProps {
-  issue: IssueDetail;
-}
+import { layoutStyles } from "../../styles/layout";
+import { textStyles } from "../../styles/typography";
+import { markdownStyles } from "../../styles/markdown";
+import { spacing, colors } from "../../styles/theme";
+import { IssueDetailsInfoProps } from "../../types";
 
 export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (

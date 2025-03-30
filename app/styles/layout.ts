@@ -1,0 +1,86 @@
+import { StyleSheet } from "react-native";
+import { colors, spacing } from "./theme";
+
+export const layoutStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: colors.background.primary,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colors.background.primary,
+    },
+    header: {
+        padding: spacing.base,
+    },
+    headerRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+    },
+    headerContent: {
+        flex: 1,
+        marginRight: spacing.base,
+    },
+    headerBorder: {
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
+    },
+    footer: {
+        padding: spacing.base,
+        alignItems: "center",
+    },
+    list: {
+        padding: spacing.base,
+    },
+    item: {
+        padding: spacing.base,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
+    },
+    itemHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: spacing.sm,
+    },
+    itemBody: {
+        marginTop: spacing.sm,
+    },
+    statusContainer: {
+        flexDirection: "row",
+        marginBottom: spacing.sm,
+    },
+    statusButton: {
+        flex: 1,
+        padding: spacing.sm,
+        alignItems: "center",
+        borderRadius: spacing.sm,
+        marginHorizontal: spacing.xs,
+        backgroundColor: colors.background.secondary,
+    },
+    statusButtonActive: {
+        backgroundColor: colors.success,
+    },
+    statusButtonClosed: {
+        backgroundColor: colors.error,
+    },
+    statusBadge: {
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.xs,
+        borderRadius: 12,
+    },
+    statusBadgeOpen: {
+        backgroundColor: colors.success,
+    },
+    statusBadgeClosed: {
+        backgroundColor: colors.error,
+    },
+}); 
