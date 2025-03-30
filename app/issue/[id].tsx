@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { View, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../lib/queries";
@@ -7,6 +7,9 @@ import CommentsList from "../components/comments/CommentsList";
 import { layoutStyles } from "../styles/layout";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import ErrorMessage from "../components/common/ErrorMessage";
+import { useComments } from "../hooks/useComments";
+import { useCallback } from "react";
+import { Comment } from "../types";
 
 interface IssueDetail {
   id: string;
@@ -21,6 +24,8 @@ interface IssueDetail {
   };
 }
 
+type ListItem = IssueDetail | Array<{ node: Comment }>;
+
 export default function IssueDetailScreen() {
   const { id } = useLocalSearchParams();
   const issueNumber = parseInt(id as string);
@@ -33,6 +38,20 @@ export default function IssueDetailScreen() {
     },
     skip: !issueNumber,
   });
+
+  const {
+    comments,
+    pageInfo,
+    isLoadingMore,
+    loadMoreComments,
+    totalCount
+  } = useComments(issueNumber);
+
+  const handleEndReached = useCallback(() => {
+    if (!isLoadingMore && pageInfo?.hasNextPage) {
+      loadMoreComments();
+    }
+  }, [isLoadingMore, pageInfo?.hasNextPage, loadMoreComments]);
 
   if (loading && !data) {
     return <LoadingIndicator />;
@@ -48,10 +67,36 @@ export default function IssueDetailScreen() {
     return <ErrorMessage message="Issue not found" />;
   }
 
+  const renderFooter = () => {
+    if (!pageInfo?.hasNextPage) return null;
+    return (
+      <View style={[layoutStyles.footer, { paddingVertical: 16 }]}>
+        {isLoadingMore ? <LoadingIndicator /> : null}
+      </View>
+    );
+  };
+
+  const renderItem = ({ item, index }: { item: ListItem; index: number }) => {
+    if (index === 0) {
+      return <IssueDetailsInfo issue={item as IssueDetail} />;
+    }
+    return <CommentsList comments={item as Array<{ node: Comment }>} totalCount={totalCount} />;
+  };
+
+  const listData: ListItem[] = [issue, comments];
+
   return (
-    <ScrollView style={layoutStyles.container}>
-      <IssueDetailsInfo issue={issue} />
-      <CommentsList issueNumber={issueNumber} />
-    </ScrollView>
+    <FlatList
+      data={listData}
+      renderItem={renderItem}
+      keyExtractor={(_, index) => index.toString()}
+      ListFooterComponent={renderFooter}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.2}
+      removeClippedSubviews={true}
+      maxToRenderPerBatch={5}
+      windowSize={5}
+      initialNumToRender={5}
+    />
   );
 }
