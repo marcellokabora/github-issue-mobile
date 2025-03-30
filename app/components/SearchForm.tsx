@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { ISSUE_STATUS, IssueStatus } from "../lib/constants";
-import { commonStyles } from "../styles";
+import { formStyles, buttonStyles, layoutStyles, textStyles } from "../styles";
 
 export default function SearchForm() {
   const router = useRouter();
@@ -28,10 +28,10 @@ export default function SearchForm() {
   };
 
   return (
-    <View style={commonStyles.formContainer}>
-      <View style={commonStyles.searchContainer}>
+    <View style={formStyles.container}>
+      <View style={formStyles.searchContainer}>
         <TextInput
-          style={commonStyles.input}
+          style={formStyles.input}
           placeholder="Search issues..."
           value={searchText}
           onChangeText={setSearchText}
@@ -39,24 +39,24 @@ export default function SearchForm() {
           returnKeyType="search"
         />
         <TouchableOpacity
-          style={commonStyles.button}
+          style={[buttonStyles.base, buttonStyles.primary]}
           onPress={handleSearch}
         >
-          <Text style={commonStyles.buttonText}>Search</Text>
+          <Text style={[buttonStyles.text, buttonStyles.textPrimary]}>Search</Text>
         </TouchableOpacity>
       </View>
-      <View style={commonStyles.statusContainer}>
+      <View style={layoutStyles.headerRow}>
         <TouchableOpacity
           style={[
-            commonStyles.statusButton,
-            (!status || status === ISSUE_STATUS.OPEN) && commonStyles.statusButtonActive,
+            layoutStyles.statusButton,
+            (!status || status === ISSUE_STATUS.OPEN) && layoutStyles.statusButtonActive,
           ]}
           onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
         >
           <Text
             style={[
-              commonStyles.statusText,
-              (!status || status === ISSUE_STATUS.OPEN) && commonStyles.statusTextActive,
+              textStyles.statusText,
+              (!status || status === ISSUE_STATUS.OPEN) && textStyles.statusTextActive,
             ]}
           >
             Open
@@ -64,15 +64,15 @@ export default function SearchForm() {
         </TouchableOpacity>
         <TouchableOpacity
           style={[
-            commonStyles.statusButton,
-            status === ISSUE_STATUS.CLOSED && commonStyles.statusButtonClosed,
+            layoutStyles.statusButton,
+            status === ISSUE_STATUS.CLOSED && layoutStyles.statusButtonClosed,
           ]}
           onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
         >
           <Text
             style={[
-              commonStyles.statusText,
-              status === ISSUE_STATUS.CLOSED && commonStyles.statusTextActive,
+              textStyles.statusText,
+              status === ISSUE_STATUS.CLOSED && textStyles.statusTextActive,
             ]}
           >
             Closed

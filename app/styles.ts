@@ -41,7 +41,8 @@ export const spacing = {
     xl: 32,
 } as const;
 
-export const commonStyles = StyleSheet.create({
+// Layout styles
+export const layoutStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background.primary,
@@ -57,19 +58,9 @@ export const commonStyles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: colors.background.primary,
     },
-    errorText: {
-        fontSize: typography.sizes.base,
-        color: colors.error,
-        textAlign: "center",
-        marginTop: spacing.base,
-    },
-    emptyText: {
-        fontSize: typography.sizes["2xl"],
-        fontWeight: typography.weights.bold,
-        color: colors.text.primary,
-    },
     header: {
         paddingBottom: spacing.base,
+        padding: spacing.base,
     },
     headerRow: {
         flexDirection: "row",
@@ -84,6 +75,41 @@ export const commonStyles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: colors.border,
     },
+    footer: {
+        padding: spacing.base,
+        alignItems: "center",
+    },
+    list: {
+        padding: spacing.base,
+    },
+    item: {
+        padding: spacing.base,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
+    },
+    itemHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: spacing.sm,
+    },
+    itemBody: {
+        marginTop: spacing.sm,
+    },
+    statusButton: {
+        flex: 1,
+        padding: spacing.sm,
+        alignItems: "center",
+        borderRadius: spacing.sm,
+        marginHorizontal: spacing.xs,
+        backgroundColor: colors.background.secondary,
+    },
+    statusButtonActive: {
+        backgroundColor: colors.success,
+    },
+    statusButtonClosed: {
+        backgroundColor: colors.error,
+    },
     statusBadge: {
         paddingHorizontal: spacing.sm,
         paddingVertical: spacing.xs,
@@ -95,70 +121,93 @@ export const commonStyles = StyleSheet.create({
     statusBadgeClosed: {
         backgroundColor: colors.error,
     },
-    subtitle: {
-        fontSize: typography.sizes.lg,
-        fontWeight: typography.weights.semibold,
-    },
+});
+
+// Text styles
+export const textStyles = StyleSheet.create({
     title: {
         fontSize: typography.sizes.xl,
         fontWeight: typography.weights.semibold,
+        color: colors.text.primary,
     },
-    textPrimary: {
+    subtitle: {
+        fontSize: typography.sizes.lg,
+        fontWeight: typography.weights.semibold,
+        color: colors.text.primary,
+    },
+    primary: {
         fontSize: typography.sizes.base,
         color: colors.text.primary,
     },
-    textSecondary: {
+    secondary: {
         fontSize: typography.sizes.sm,
         color: colors.text.secondary,
     },
-    button: {
-        padding: spacing.sm,
-        backgroundColor: colors.background.secondary,
-        borderRadius: 8,
-        minWidth: 120,
-        alignItems: "center",
+    error: {
+        fontSize: typography.sizes.base,
+        color: colors.error,
+        textAlign: "center",
+        marginTop: spacing.base,
     },
-    buttonText: {
-        color: colors.primary,
-        fontSize: typography.sizes.sm,
+    empty: {
+        fontSize: typography.sizes["2xl"],
+        fontWeight: typography.weights.bold,
+        color: colors.text.primary,
+    },
+    statusText: {
+        fontSize: typography.sizes.base,
+        color: colors.text.secondary,
         fontWeight: typography.weights.semibold,
     },
-    list: {
-        padding: spacing.base,
+    statusTextActive: {
+        color: colors.text.light,
     },
-    footer: {
-        padding: spacing.base,
-        alignItems: "center",
-    },
-    listItem: {
-        padding: spacing.base,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
-    },
-    issueHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: spacing.sm,
-    },
-    issueNumber: {
+    itemNumber: {
         fontSize: typography.sizes.sm,
         color: colors.text.secondary,
     },
-    issueTitle: {
+    itemTitle: {
         fontSize: typography.sizes.base,
         fontWeight: typography.weights.semibold,
         marginBottom: spacing.xs,
     },
-    commentHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginBottom: spacing.sm,
+});
+
+// Button styles
+export const buttonStyles = StyleSheet.create({
+    base: {
+        padding: spacing.sm,
+        borderRadius: 8,
+        minWidth: 120,
+        alignItems: "center",
     },
-    commentBody: {
-        marginTop: spacing.sm,
+    primary: {
+        backgroundColor: colors.primary,
     },
-    formContainer: {
+    secondary: {
+        backgroundColor: colors.background.secondary,
+    },
+    success: {
+        backgroundColor: colors.success,
+    },
+    error: {
+        backgroundColor: colors.error,
+    },
+    text: {
+        fontSize: typography.sizes.sm,
+        fontWeight: typography.weights.semibold,
+    },
+    textPrimary: {
+        color: colors.text.light,
+    },
+    textSecondary: {
+        color: colors.primary,
+    },
+});
+
+// Form styles
+export const formStyles = StyleSheet.create({
+    container: {
         padding: spacing.base,
         backgroundColor: colors.background.primary,
         borderBottomWidth: 1,
@@ -179,32 +228,6 @@ export const commonStyles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginBottom: spacing.base,
-    },
-    statusContainer: {
-        flexDirection: "row",
-        marginBottom: spacing.sm,
-    },
-    statusButton: {
-        flex: 1,
-        padding: spacing.sm,
-        alignItems: "center",
-        borderRadius: spacing.sm,
-        marginHorizontal: spacing.xs,
-        backgroundColor: colors.background.secondary,
-    },
-    statusButtonActive: {
-        backgroundColor: colors.success,
-    },
-    statusButtonClosed: {
-        backgroundColor: colors.error,
-    },
-    statusText: {
-        fontSize: typography.sizes.base,
-        color: colors.text.secondary,
-    },
-    statusTextActive: {
-        color: colors.text.light,
-        fontWeight: typography.weights.semibold,
     },
 });
 

@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ISSUE_COMMENTS } from "../lib/queries";
 import Markdown from "react-native-markdown-display";
 import { useState } from "react";
-import { commonStyles, colors, markdownStyles } from "../styles";
+import { layoutStyles, textStyles, buttonStyles, markdownStyles, colors, spacing } from "../styles";
 
 interface Comment {
   id: string;
@@ -86,7 +86,7 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
 
   if (loading && !data) {
     return (
-      <View style={commonStyles.loadingContainer}>
+      <View style={layoutStyles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -94,8 +94,8 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
 
   if (error) {
     return (
-      <View style={commonStyles.container}>
-        <Text style={commonStyles.errorText}>Error: {error.message}</Text>
+      <View style={layoutStyles.container}>
+        <Text style={textStyles.error}>Error: {error.message}</Text>
       </View>
     );
   }
@@ -103,40 +103,50 @@ export default function CommentsList({ issueNumber }: CommentsListProps) {
   const totalCount = data?.repository?.issue?.commentsCount?.totalCount || 0;
 
   return (
-    <View style={commonStyles.container}>
-      <View style={commonStyles.header}>
-        <Text style={commonStyles.subtitle}>
+    <View>
+      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
+        <Text style={textStyles.title}>
           {totalCount} {totalCount === 1 ? "comment" : "comments"}
         </Text>
       </View>
-      {comments.map(({ node: comment }) => (
-        <View key={comment.id} style={commonStyles.listItem}>
-          <View style={commonStyles.commentHeader}>
-            <Text style={commonStyles.textPrimary}>{comment.author.login}</Text>
-            <Text style={commonStyles.textSecondary}>
-              {new Date(comment.createdAt).toLocaleDateString()}
-            </Text>
+      {
+        comments.map(({ node: comment }) => (
+          <View
+            key={comment.id}
+            style={[
+              layoutStyles.item,
+              { borderBottomWidth: 1 }
+            ]}
+          >
+            <View style={layoutStyles.itemHeader}>
+              <Text style={textStyles.subtitle}>{comment.author.login}</Text>
+              <Text style={textStyles.secondary}>
+                {new Date(comment.createdAt).toLocaleDateString()}
+              </Text>
+            </View>
+            <View style={layoutStyles.itemBody}>
+              <Markdown style={markdownStyles}>{comment.body}</Markdown>
+            </View>
           </View>
-          <View style={commonStyles.commentBody}>
-            <Markdown style={markdownStyles}>{comment.body}</Markdown>
-          </View>
-        </View>
-      ))}
+        ))
+      }
 
-      {pageInfo?.hasNextPage && (
-        <View style={[commonStyles.listItem, { borderBottomWidth: 0 }]}>
-          {isLoadingMore ? (
-            <ActivityIndicator size="small" color={colors.primary} />
-          ) : (
-            <TouchableOpacity
-              style={commonStyles.button}
-              onPress={loadMoreComments}
-            >
-              <Text style={commonStyles.buttonText}>Load More Comments</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      )}
-    </View>
+      {
+        pageInfo?.hasNextPage && (
+          <View style={[layoutStyles.item, { borderBottomWidth: 0 }]}>
+            {isLoadingMore ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <TouchableOpacity
+                style={[buttonStyles.base, buttonStyles.secondary]}
+                onPress={loadMoreComments}
+              >
+                <Text style={[buttonStyles.text, buttonStyles.textSecondary]}>Load More Comments</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )
+      }
+    </View >
   );
 } 

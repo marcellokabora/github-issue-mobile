@@ -3,7 +3,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { SEARCH_ISSUES } from "../lib/queries";
 import { useState, useEffect, useRef } from "react";
-import { commonStyles, colors } from "../styles";
+import { layoutStyles, textStyles, buttonStyles, colors } from "../styles";
 
 interface Issue {
   id: string;
@@ -86,19 +86,19 @@ export default function IssuesList() {
 
   const renderIssue = ({ item }: { item: Issue }) => (
     <Pressable
-      style={commonStyles.listItem}
+      style={layoutStyles.item}
       onPress={() => router.push({
         pathname: "/issue/[id]",
         params: { id: item.number }
       })}
     >
-      <View style={commonStyles.issueHeader}>
-        <Text style={commonStyles.issueNumber}>#{item.number}</Text>
-        <Text style={commonStyles.textSecondary}>
+      <View style={layoutStyles.itemHeader}>
+        <Text style={textStyles.itemNumber}>#{item.number}</Text>
+        <Text style={textStyles.secondary}>
           {new Date(item.createdAt).toLocaleDateString()}
         </Text>
       </View>
-      <Text style={commonStyles.issueTitle}>{item.title}</Text>
+      <Text style={textStyles.itemTitle}>{item.title}</Text>
     </Pressable>
   );
 
@@ -106,15 +106,15 @@ export default function IssuesList() {
     if (!pageInfo?.hasNextPage) return null;
 
     return (
-      <View style={commonStyles.footer}>
+      <View style={layoutStyles.footer}>
         {isLoadingMore ? (
           <ActivityIndicator size="small" color={colors.primary} />
         ) : (
           <TouchableOpacity
-            style={commonStyles.button}
+            style={[buttonStyles.base, buttonStyles.secondary]}
             onPress={loadMore}
           >
-            <Text style={commonStyles.buttonText}>Load More</Text>
+            <Text style={[buttonStyles.text, buttonStyles.textSecondary]}>Load More</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -123,7 +123,7 @@ export default function IssuesList() {
 
   if (loading && issues.length === 0) {
     return (
-      <View style={commonStyles.loadingContainer}>
+      <View style={layoutStyles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -131,31 +131,31 @@ export default function IssuesList() {
 
   if (error) {
     return (
-      <View style={commonStyles.container}>
-        <Text style={commonStyles.errorText}>Error: {error.message}</Text>
+      <View style={layoutStyles.container}>
+        <Text style={textStyles.error}>Error: {error.message}</Text>
       </View>
     );
   }
 
   if (!search) {
     return (
-      <View style={commonStyles.emptyContainer}>
-        <Text style={commonStyles.emptyText}>GitHub Issues</Text>
+      <View style={layoutStyles.emptyContainer}>
+        <Text style={textStyles.empty}>GitHub Issues</Text>
       </View>
     );
   }
 
   return (
-    <View style={commonStyles.container}>
+    <View style={layoutStyles.container}>
       {issues.length === 0 ? (
-        <Text style={commonStyles.errorText}>No issues found</Text>
+        <Text style={textStyles.error}>No issues found</Text>
       ) : (
         <FlatList
           ref={flatListRef}
           data={issues}
           renderItem={renderIssue}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={commonStyles.list}
+          contentContainerStyle={layoutStyles.list}
           ListFooterComponent={renderFooter}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}

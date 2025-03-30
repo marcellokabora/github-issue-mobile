@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import Markdown from "react-native-markdown-display";
-import { commonStyles, colors, markdownStyles, spacing } from "../styles";
+import { layoutStyles, textStyles, markdownStyles, spacing, colors } from "../styles";
 
 interface IssueDetail {
   id: string;
@@ -21,28 +21,28 @@ interface IssueDetailsInfoProps {
 
 export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (
-    <View style={[commonStyles.container, { padding: spacing.base }]}>
-      <View style={[commonStyles.header, commonStyles.headerRow]}>
-        <View style={commonStyles.headerContent}>
-          <Text style={[commonStyles.textSecondary, { marginBottom: 4 }]}>#{issue.number}</Text>
-          <Text style={commonStyles.title}>{issue.title}</Text>
+    <View style={[layoutStyles.container]}>
+      <View style={[layoutStyles.header, layoutStyles.headerRow]}>
+        <View style={layoutStyles.headerContent}>
+          <Text style={[textStyles.secondary, { marginBottom: spacing.xs }]}>#{issue.number}</Text>
+          <Text style={textStyles.title}>{issue.title}</Text>
         </View>
         <View style={[
-          commonStyles.statusBadge,
-          issue.state === "OPEN" ? commonStyles.statusBadgeOpen : commonStyles.statusBadgeClosed
+          layoutStyles.statusBadge,
+          issue.state === "OPEN" ? layoutStyles.statusBadgeOpen : layoutStyles.statusBadgeClosed
         ]}>
-          <Text style={[commonStyles.statusText, { color: colors.text.light }]}>{issue.state}</Text>
+          <Text style={[textStyles.statusText, { color: colors.text.light }]}>{issue.state}</Text>
         </View>
       </View>
 
-      <View style={[commonStyles.header, commonStyles.headerBorder]}>
-        <Text style={commonStyles.textSecondary}>
+      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
+        <Text style={textStyles.secondary}>
           {issue.author.login} opened this issue on{" "}
           {new Date(issue.createdAt).toLocaleDateString()}
         </Text>
       </View>
 
-      <View style={[commonStyles.header, { borderBottomWidth: 0 }]}>
+      <View style={[layoutStyles.header, { borderBottomWidth: 0 }]}>
         <Markdown style={markdownStyles}>{issue.body}</Markdown>
       </View>
     </View>
