@@ -40,10 +40,12 @@ export default function SearchForm() {
           onChangeText={setSearchText}
           onSubmitEditing={handleSearch}
           returnKeyType="search"
+          testID="search-input"
         />
         <TouchableOpacity
           style={[buttonStyles.base, buttonStyles.primary]}
           onPress={handleSearch}
+          testID="search-button"
         >
           <Text style={[buttonStyles.text, buttonStyles.textPrimary]}>Search</Text>
         </TouchableOpacity>
@@ -55,6 +57,7 @@ export default function SearchForm() {
             (!status || status === ISSUE_STATUS.OPEN) && layoutStyles.statusButtonActive,
           ]}
           onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
+          testID={`status-button-${ISSUE_STATUS.OPEN}`}
         >
           <Text
             style={[
@@ -71,6 +74,7 @@ export default function SearchForm() {
             status === ISSUE_STATUS.CLOSED && layoutStyles.statusButtonClosed,
           ]}
           onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
+          testID={`status-button-${ISSUE_STATUS.CLOSED}`}
         >
           <Text
             style={[

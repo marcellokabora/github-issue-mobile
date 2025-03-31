@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import IssuesList from '../IssuesList';
 import { useIssues } from '../../../hooks/useIssues';
@@ -104,7 +104,7 @@ describe('IssuesList', () => {
             flatListRef: { current: null },
         });
 
-        const { getByText, getByTestId } = render(<IssuesList />);
+        const { getByText } = render(<IssuesList />);
 
         // Check if issues are rendered
         expect(getByText('#1')).toBeTruthy();
