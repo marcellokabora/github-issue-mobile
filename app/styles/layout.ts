@@ -111,12 +111,8 @@ export const layoutStyles = StyleSheet.create({
         paddingHorizontal: spacing.base,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         height: 56,
-    },
-    navHeaderLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        backgroundColor: colors.background.primary,
     },
     navHeaderBackButton: {
         marginRight: spacing.base,

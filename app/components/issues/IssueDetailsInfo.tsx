@@ -15,7 +15,17 @@ export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (
     <View style={layoutStyles.container}>
 
-      <View style={layoutStyles.item}>
+
+      <View style={[layoutStyles.header]}>
+        <Text
+          style={[textStyles.title, { marginBottom: spacing.base }]}
+          testID="issue-title"
+        >
+          {issue.title}
+        </Text>
+      </View>
+
+      <View style={[layoutStyles.header, layoutStyles.headerBorderTop]}>
         <View style={layoutStyles.avatarContainer}>
           <Image
             source={{ uri: issue.author.avatarUrl }}
@@ -37,24 +47,7 @@ export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
       </View>
 
 
-      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
-        <View style={layoutStyles.headerContent}>
-          <Text
-            style={[textStyles.itemNumber, { marginBottom: spacing.base }]}
-            testID="issue-number"
-          >
-            #{issue.number}
-          </Text>
-          <Text
-            style={[textStyles.title, { marginBottom: spacing.base }]}
-            testID="issue-title"
-          >
-            {issue.title}
-          </Text>
-        </View>
-      </View>
-
-      <View style={[layoutStyles.header, { borderBottomWidth: 0 }]}>
+      <View style={[layoutStyles.header, layoutStyles.headerBorderTop]}>
         <Markdown style={markdownStyles}>
           {issue.body}
         </Markdown>
