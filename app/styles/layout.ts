@@ -4,6 +4,7 @@ import { colors, spacing } from "./theme";
 export const layoutStyles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: colors.background.primary,
     },
     loadingContainer: {
         flex: 1,
@@ -69,6 +70,7 @@ export const layoutStyles = StyleSheet.create({
     },
     statusButtonClosed: {
         backgroundColor: colors.error,
+        color: colors.text.light,
     },
     statusBadge: {
         paddingHorizontal: spacing.sm,

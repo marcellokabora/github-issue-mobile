@@ -2,31 +2,44 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { ISSUE_STATUS, IssueStatus } from "../../utils/constants";
-import { formStyles } from "../../styles/components";
-import { buttonStyles } from "../../styles/components";
+import { formStyles, buttonStyles } from "../../styles/components";
 import { layoutStyles } from "../../styles/layout";
 import { textStyles } from "../../styles/typography";
 
 export default function SearchForm() {
   const router = useRouter();
   const { search, status } = useLocalSearchParams();
-  const [searchText, setSearchText] = useState(search as string || "");
+  const [formData, setFormData] = useState({
+    search: search as string || "",
+    status: status as IssueStatus || ISSUE_STATUS.OPEN
+  });
 
   useEffect(() => {
-    setSearchText(search as string || "");
-  }, [search]);
-
-  const handleSearch = () => {
-    router.setParams({
-      search: searchText.trim(),
-      status: status || ISSUE_STATUS.OPEN
+    setFormData({
+      search: search as string || "",
+      status: status as IssueStatus || ISSUE_STATUS.OPEN
     });
+  }, [search, status]);
+
+  const handleFormChange = (field: string, value: string | IssueStatus) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    // If it's a status change, update the URL params
+    if (field === 'status') {
+      router.setParams({
+        search: formData.search.trim(),
+        status: value
+      });
+    }
   };
 
-  const handleStatusChange = (newStatus: IssueStatus) => {
+  const handleSubmit = () => {
     router.setParams({
-      search: searchText.trim(),
-      status: newStatus
+      search: formData.search.trim(),
+      status: formData.status
     });
   };
 
@@ -36,15 +49,15 @@ export default function SearchForm() {
         <TextInput
           style={formStyles.input}
           placeholder="Search issues..."
-          value={searchText}
-          onChangeText={setSearchText}
-          onSubmitEditing={handleSearch}
+          value={formData.search}
+          onChangeText={(value) => handleFormChange('search', value)}
+          onSubmitEditing={handleSubmit}
           returnKeyType="search"
           testID="search-input"
         />
         <TouchableOpacity
           style={[buttonStyles.base, buttonStyles.primary]}
-          onPress={handleSearch}
+          onPress={handleSubmit}
           testID="search-button"
         >
           <Text style={[buttonStyles.text, buttonStyles.textPrimary]}>Search</Text>
@@ -54,15 +67,15 @@ export default function SearchForm() {
         <TouchableOpacity
           style={[
             layoutStyles.statusButton,
-            (!status || status === ISSUE_STATUS.OPEN) && layoutStyles.statusButtonActive,
+            (!formData.status || formData.status === ISSUE_STATUS.OPEN) && layoutStyles.statusButtonActive,
           ]}
-          onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
+          onPress={() => handleFormChange('status', ISSUE_STATUS.OPEN)}
           testID={`status-button-${ISSUE_STATUS.OPEN}`}
         >
           <Text
             style={[
               textStyles.statusText,
-              (!status || status === ISSUE_STATUS.OPEN) && textStyles.statusTextActive,
+              (!formData.status || formData.status === ISSUE_STATUS.OPEN) && textStyles.statusTextActive,
             ]}
           >
             Open
@@ -71,15 +84,15 @@ export default function SearchForm() {
         <TouchableOpacity
           style={[
             layoutStyles.statusButton,
-            status === ISSUE_STATUS.CLOSED && layoutStyles.statusButtonClosed,
+            formData.status === ISSUE_STATUS.CLOSED && layoutStyles.statusButtonClosed,
           ]}
-          onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
+          onPress={() => handleFormChange('status', ISSUE_STATUS.CLOSED)}
           testID={`status-button-${ISSUE_STATUS.CLOSED}`}
         >
           <Text
             style={[
               textStyles.statusText,
-              status === ISSUE_STATUS.CLOSED && textStyles.statusTextActive,
+              formData.status === ISSUE_STATUS.CLOSED && textStyles.statusTextActive,
             ]}
           >
             Closed

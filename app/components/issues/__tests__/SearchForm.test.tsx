@@ -21,7 +21,7 @@ describe('SearchForm', () => {
 
         // Setup default mock implementations
         (useRouter as jest.Mock).mockReturnValue(mockRouter);
-        (useLocalSearchParams as jest.Mock).mockReturnValue({ search: '', status: '' });
+        (useLocalSearchParams as jest.Mock).mockReturnValue({ search: '', status: ISSUE_STATUS.OPEN });
     });
 
     it('renders search input with empty value by default', () => {
@@ -34,7 +34,7 @@ describe('SearchForm', () => {
         const initialSearch = 'test search';
         (useLocalSearchParams as jest.Mock).mockReturnValue({
             search: initialSearch,
-            status: ''
+            status: ISSUE_STATUS.OPEN
         });
 
         const { getByTestId } = render(<SearchForm />);
@@ -152,5 +152,21 @@ describe('SearchForm', () => {
             search: '',
             status: ISSUE_STATUS.CLOSED
         });
+    });
+
+    it('updates form state when URL params change', () => {
+        const { getByTestId, rerender } = render(<SearchForm />);
+
+        // Change URL params
+        (useLocalSearchParams as jest.Mock).mockReturnValue({
+            search: 'new search',
+            status: ISSUE_STATUS.CLOSED
+        });
+
+        // Rerender to trigger useEffect
+        rerender(<SearchForm />);
+
+        const searchInput = getByTestId('search-input');
+        expect(searchInput.props.value).toBe('new search');
     });
 }); 

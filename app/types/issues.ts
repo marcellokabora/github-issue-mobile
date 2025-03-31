@@ -19,6 +19,3 @@ export interface IssueDetail {
     };
 }
 
-export interface IssueDetailsInfoProps {
-    issue: IssueDetail;
-} 
