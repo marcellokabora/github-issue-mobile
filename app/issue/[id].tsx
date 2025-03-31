@@ -1,5 +1,5 @@
 import { View, FlatList } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../graphql/queries";
 import IssueDetailsInfo from "../components/issues/IssueDetailsInfo";
@@ -8,7 +8,7 @@ import { layoutStyles } from "../styles/layout";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import ErrorMessage from "../components/common/ErrorMessage";
 import { useComments } from "../hooks/useComments";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Comment } from "../types";
 
 interface IssueDetail {
@@ -28,6 +28,7 @@ type ListItem = IssueDetail | Array<{ node: Comment }>;
 
 export default function IssueDetailScreen() {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
   const issueNumber = parseInt(id as string);
 
   const { loading, error, data } = useQuery(GET_ISSUE_DETAIL, {
@@ -46,6 +47,12 @@ export default function IssueDetailScreen() {
     loadMoreComments,
     totalCount
   } = useComments(issueNumber);
+
+  useEffect(() => {
+    if (data?.repository?.issue) {
+      router.setParams({ issue: data.repository.issue });
+    }
+  }, [data?.repository?.issue]);
 
   const handleEndReached = useCallback(() => {
     if (!isLoadingMore && pageInfo?.hasNextPage) {

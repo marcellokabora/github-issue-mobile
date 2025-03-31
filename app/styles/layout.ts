@@ -102,4 +102,19 @@ export const layoutStyles = StyleSheet.create({
     avatarContent: {
         flex: 1,
     },
+    // Navigation header styles
+    navHeader: {
+        paddingHorizontal: spacing.base,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 56,
+    },
+    navHeaderLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    navHeaderBackButton: {
+        marginRight: spacing.base,
+    },
 }); 
