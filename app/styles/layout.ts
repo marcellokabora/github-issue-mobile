@@ -36,6 +36,10 @@ export const layoutStyles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: colors.border,
     },
+    headerBorderTop: {
+        borderTopWidth: 1,
+        borderTopColor: colors.border,
+    },
     footer: {
         padding: spacing.base,
         alignItems: "center",
@@ -79,7 +83,7 @@ export const layoutStyles = StyleSheet.create({
     statusBadge: {
         paddingHorizontal: spacing.sm,
         paddingVertical: spacing.xs,
-        borderRadius: 12,
+        borderRadius: 100,
     },
     statusBadgeOpen: {
         backgroundColor: colors.success,

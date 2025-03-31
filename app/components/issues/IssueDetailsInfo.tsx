@@ -14,31 +14,42 @@ interface IssueDetailsInfoProps {
 export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (
     <View style={layoutStyles.container}>
-      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
-        <View style={layoutStyles.headerContent}>
-          <Text
-            style={[[textStyles.title, { marginBottom: spacing.base }]]}
-            testID="issue-title"
-          >
-            {issue.title}
-          </Text>
-        </View>
-      </View>
 
-      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
-        <View style={layoutStyles.headerCenter}>
+      <View style={layoutStyles.item}>
+        <View style={layoutStyles.avatarContainer}>
           <Image
             source={{ uri: issue.author.avatarUrl }}
             style={[layoutStyles.avatar, { marginRight: spacing.sm }]}
             testID="issue-author-avatar"
           />
+          <View style={layoutStyles.avatarContent}>
+            <Text
+              style={textStyles.secondary}
+
+            >
+              <Text style={{ fontWeight: 'bold' }} testID="issue-author-info">{issue.author.login}</Text>
+            </Text>
+            <Text style={textStyles.secondary} testID="issue-createdAt">
+              {formatDate(issue.createdAt)}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+
+      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
+        <View style={layoutStyles.headerContent}>
           <Text
-            style={textStyles.secondary}
-            testID="issue-author-info"
+            style={[textStyles.itemNumber, { marginBottom: spacing.base }]}
+            testID="issue-number"
           >
-            <Text style={{ fontWeight: 'bold' }}>{issue.author.login}</Text>
-            {" opened this issue on "}
-            {formatDate(issue.createdAt)}
+            #{issue.number}
+          </Text>
+          <Text
+            style={[textStyles.title, { marginBottom: spacing.base }]}
+            testID="issue-title"
+          >
+            {issue.title}
           </Text>
         </View>
       </View>

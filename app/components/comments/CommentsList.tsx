@@ -23,7 +23,7 @@ export default function CommentsList({ comments, totalCount }: CommentsListProps
 
   return (
     <View style={layoutStyles.container}>
-      <Text testID="comments-count" style={[textStyles.title, layoutStyles.header]}>
+      <Text testID="comments-count" style={[textStyles.title, layoutStyles.header, layoutStyles.headerBorder, layoutStyles.headerBorderTop]}>
         {formatCommentCount(totalCount)}
       </Text>
       {comments.map(({ node }) => (
