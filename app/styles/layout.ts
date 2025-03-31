@@ -24,6 +24,10 @@ export const layoutStyles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "flex-start",
     },
+    headerCenter: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
     headerContent: {
         flex: 1,
         marginRight: spacing.base,

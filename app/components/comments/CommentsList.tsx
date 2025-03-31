@@ -16,14 +16,14 @@ export default function CommentsList({ comments, totalCount }: CommentsListProps
   if (comments.length === 0) {
     return (
       <View style={layoutStyles.container}>
-        <Text style={textStyles.secondary}>No comments yet</Text>
+        <Text testID="no-comments" style={textStyles.secondary}>No comments yet</Text>
       </View>
     );
   }
 
   return (
     <View style={layoutStyles.container}>
-      <Text style={[textStyles.title, layoutStyles.header]}>
+      <Text testID="comments-count" style={[textStyles.title, layoutStyles.header]}>
         {formatCommentCount(totalCount)}
       </Text>
       {comments.map(({ node }) => (
@@ -32,12 +32,13 @@ export default function CommentsList({ comments, totalCount }: CommentsListProps
             <Image
               source={{ uri: node.author.avatarUrl }}
               style={layoutStyles.avatar}
+              testID={`avatar-${node.id}`}
             />
             <View style={layoutStyles.avatarContent}>
-              <Text style={textStyles.subtitle}>
+              <Text testID={`author-${node.id}`} style={textStyles.subtitle}>
                 {node.author.login}
               </Text>
-              <Text style={textStyles.secondary}>
+              <Text testID={`date-${node.id}`} style={textStyles.secondary}>
                 {formatDate(node.createdAt)}
               </Text>
             </View>

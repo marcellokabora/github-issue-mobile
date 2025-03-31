@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import Markdown from "react-native-markdown-display";
 import { layoutStyles } from "../../styles/layout";
 import { textStyles } from "../../styles/typography";
@@ -13,8 +13,8 @@ interface IssueDetailsInfoProps {
 
 export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (
-    <View style={[layoutStyles.container, layoutStyles.headerBorder]}>
-      <View style={[layoutStyles.header, layoutStyles.headerRow]}>
+    <View style={layoutStyles.container}>
+      <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
         <View style={layoutStyles.headerContent}>
           <Text
             style={[textStyles.secondary, { marginBottom: spacing.xs }]}
@@ -22,24 +22,45 @@ export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
           >
             #{issue.number}
           </Text>
-          <Text style={textStyles.title} testID="issue-title">{issue.title}</Text>
+          <Text
+            style={[[textStyles.title, { marginBottom: spacing.base }]]}
+            testID="issue-title"
+          >
+            {issue.title}
+          </Text>
         </View>
         <View style={[
           layoutStyles.statusBadge,
           issue.state === "OPEN" ? layoutStyles.statusBadgeOpen : layoutStyles.statusBadgeClosed
         ]}>
-          <Text style={[textStyles.statusText, { color: colors.text.light }]}>{issue.state}</Text>
+          <Text style={[textStyles.statusText, { color: colors.text.light }]}>
+            {issue.state}
+          </Text>
         </View>
       </View>
 
       <View style={[layoutStyles.header, layoutStyles.headerBorder]}>
-        <Text style={textStyles.secondary} testID="issue-author-info">
-          {issue.author.login} opened this issue on {formatDate(issue.createdAt)}
-        </Text>
+        <View style={layoutStyles.headerCenter}>
+          <Image
+            source={{ uri: issue.author.avatarUrl }}
+            style={[layoutStyles.avatar, { marginRight: spacing.sm }]}
+            testID="issue-author-avatar"
+          />
+          <Text
+            style={textStyles.secondary}
+            testID="issue-author-info"
+          >
+            <Text style={{ fontWeight: 'bold' }}>{issue.author.login}</Text>
+            {" opened this issue on "}
+            {formatDate(issue.createdAt)}
+          </Text>
+        </View>
       </View>
 
       <View style={[layoutStyles.header, { borderBottomWidth: 0 }]}>
-        <Markdown style={markdownStyles}>{issue.body}</Markdown>
+        <Markdown style={markdownStyles}>
+          {issue.body}
+        </Markdown>
       </View>
     </View>
   );

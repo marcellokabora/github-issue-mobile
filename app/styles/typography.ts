@@ -41,11 +41,13 @@ export const textStyles = StyleSheet.create({
     },
     itemNumber: {
         fontSize: typography.sizes.sm,
-        color: colors.text.secondary,
+        color: colors.primary,
+        fontWeight: typography.weights.medium,
     },
     itemTitle: {
         fontSize: typography.sizes.base,
         fontWeight: typography.weights.semibold,
-        marginBottom: spacing.xs,
+        color: colors.text.primary,
+        lineHeight: 22,
     },
 }); 
