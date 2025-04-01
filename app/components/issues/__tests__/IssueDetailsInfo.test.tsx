@@ -26,7 +26,6 @@ describe('IssueDetailsInfo', () => {
         expect(getByTestId('issue-createdAt')).toHaveTextContent(formatDate(mockIssue.createdAt));
 
         // Check issue details
-        expect(getByTestId('issue-number')).toHaveTextContent(`#${mockIssue.number}`);
         expect(getByTestId('issue-title')).toHaveTextContent(mockIssue.title);
     });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import CommentsList from '../CommentsList';
-import { Comment } from '../../../types';
+import { Comment } from '../../../graphql/types';
 
 // Mock the Markdown component since it's a third-party component
 jest.mock('react-native-markdown-display', () => {

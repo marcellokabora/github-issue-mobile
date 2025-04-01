@@ -2,7 +2,7 @@ import { View, Text, Image } from "react-native";
 import { layoutStyles } from "../../styles/layout";
 import { textStyles } from "../../styles/typography";
 import { markdownStyles } from "../../styles/markdown";
-import { Comment } from "../../types";
+import { Comment } from "../../graphql/types";
 import { formatDate } from "../../utils/date";
 import { formatCommentCount } from "../../utils/formatting";
 import Markdown from "react-native-markdown-display";

@@ -4,7 +4,7 @@ import { layoutStyles } from "../../styles/layout";
 import { textStyles } from "../../styles/typography";
 import { markdownStyles } from "../../styles/markdown";
 import { spacing } from "../../styles/theme";
-import { IssueDetail } from "@/app/types/issues";
+import { IssueDetail } from "@/app/graphql/types/issues";
 import { formatDate } from "../../utils/date";
 
 interface IssueDetailsInfoProps {

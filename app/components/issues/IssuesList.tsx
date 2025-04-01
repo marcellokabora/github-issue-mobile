@@ -1,8 +1,8 @@
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Issue } from "../../types";
+import { Issue } from "../../graphql/types";
 import { formatDate } from "../../utils/date";
-import { useIssues } from "../../hooks/useIssues";
+import { useIssues } from "../../graphql/hooks/useIssues";
 import LoadingIndicator from "../common/LoadingIndicator";
 import ErrorMessage from "../common/ErrorMessage";
 import { layoutStyles } from "../../styles/layout";

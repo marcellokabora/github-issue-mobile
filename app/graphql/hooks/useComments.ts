@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ISSUE_COMMENTS } from "../graphql/queries";
-import { Comment, CommentsData } from "../types";
+import { GET_ISSUE_COMMENTS } from "../queries";
+import { Comment, CommentsData } from "../types/comments";
 
 interface UseCommentsReturn {
     comments: Array<{ node: Comment }>;

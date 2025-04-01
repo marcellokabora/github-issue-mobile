@@ -7,9 +7,9 @@ import CommentsList from "../components/comments/CommentsList";
 import { layoutStyles } from "../styles/layout";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import ErrorMessage from "../components/common/ErrorMessage";
-import { useComments } from "../hooks/useComments";
+import { useComments } from "../graphql/hooks/useComments";
 import { useCallback, useEffect } from "react";
-import { Comment } from "../types";
+import { Comment } from "../graphql/types";
 
 interface IssueDetail {
   id: string;
