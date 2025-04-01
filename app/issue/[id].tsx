@@ -1,5 +1,5 @@
 import { View, FlatList, ActivityIndicator } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Stack, useNavigation } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "@/graphql/queries";
 import IssueDetailsInfo from "@/components/issues/IssueDetailsInfo";
@@ -11,7 +11,6 @@ import { useComments } from "@/graphql/hooks/useComments";
 import { useCallback, useEffect, useState } from "react";
 import { colors } from "@/styles/theme";
 import { IssueDetail } from "@/graphql/types/issues";
-import { useIssue } from "@/contexts/IssueContext";
 
 type Section = {
   type: 'issue' | 'comments';
@@ -19,7 +18,7 @@ type Section = {
 
 export default function IssueDetailScreen() {
   const { id } = useLocalSearchParams();
-  const { setIssue } = useIssue();
+  const navigation = useNavigation();
   const issueNumber = parseInt(id as string);
   const [showComments, setShowComments] = useState(false);
 
@@ -34,9 +33,11 @@ export default function IssueDetailScreen() {
 
   useEffect(() => {
     if (data?.repository?.issue) {
-      setIssue(data.repository.issue);
+      navigation.setOptions({
+        title: `Issue #${data.repository.issue.number}`
+      });
     }
-  }, [data?.repository?.issue]);
+  }, [data?.repository?.issue, navigation]);
 
   const {
     comments,
@@ -76,7 +77,6 @@ export default function IssueDetailScreen() {
         <View style={[layoutStyles.footer, { paddingVertical: 16 }]}>
           <ActivityIndicator
             size="small"
-            color={colors.primary}
             testID="loading-more-indicator"
           />
         </View>

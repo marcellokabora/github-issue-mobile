@@ -55,7 +55,6 @@ export default function IssuesList() {
         {isLoadingMore &&
           <ActivityIndicator
             size="small"
-            color={colors.primary}
             testID="loading-more-indicator"
           />
         }
