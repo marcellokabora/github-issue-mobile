@@ -13,7 +13,7 @@ interface IssueDetailsInfoProps {
 
 export default function IssueDetailsInfo({ issue }: IssueDetailsInfoProps) {
   return (
-    <View style={layoutStyles.container}>
+    <View style={[layoutStyles.container, layoutStyles.headerBorderTop]}>
 
 
       <View style={[layoutStyles.header]}>
