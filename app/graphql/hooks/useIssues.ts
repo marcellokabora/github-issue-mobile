@@ -55,7 +55,7 @@ export const useIssues = ({ search = "", status = ISSUE_STATUS.OPEN }: UseIssues
     const issues = data?.search?.edges?.map((edge: any) => edge.node) || [];
 
     const loadMore = async () => {
-        if (isLoadingMore || !pageInfo?.hasNextPage || !pageInfo?.endCursor) return;
+        if (!pageInfo?.hasNextPage || !pageInfo?.endCursor) return;
 
         setIsLoadingMore(true);
         try {
@@ -81,6 +81,9 @@ export const useIssues = ({ search = "", status = ISSUE_STATUS.OPEN }: UseIssues
             if (result.data?.search?.pageInfo) {
                 setPageInfo(result.data.search.pageInfo);
             }
+        } catch (error) {
+            console.error("Error loading more issues:", error);
+            // You might want to show a toast or error message to the user here
         } finally {
             setIsLoadingMore(false);
         }

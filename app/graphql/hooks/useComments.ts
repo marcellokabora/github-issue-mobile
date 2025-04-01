@@ -56,6 +56,9 @@ export const useComments = (issueNumber: number): UseCommentsReturn => {
                 setComments(prevComments => [...prevComments, ...newComments]);
                 setPageInfo(result.data.repository.issue.comments.pageInfo);
             }
+        } catch (error) {
+            console.error('Error loading more comments:', error);
+            // You might want to show a toast or error message to the user here
         } finally {
             setIsLoadingMore(false);
         }
