@@ -3,11 +3,10 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Issue } from "@/graphql/types";
 import { formatDate } from "@/utils/date";
 import { useIssues } from "@/graphql/hooks/useIssues";
-import LoadingIndicator from "../common/LoadingIndicator";
-import ErrorMessage from "../common/ErrorMessage";
+import LoadingIndicator from "@/components/common/LoadingIndicator";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import { layoutStyles } from "@/styles/layout";
 import { textStyles } from "@/styles/typography";
-import { colors } from "@/styles/theme";
 
 export default function IssuesList() {
   const router = useRouter();

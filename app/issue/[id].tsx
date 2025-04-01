@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "@/graphql/queries";
 import IssueDetailsInfo from "@/components/issues/IssueDetailsInfo";
 import CommentsList from "@/components/comments/CommentsList";
-import { layoutStyles } from "../styles/layout";
+import { layoutStyles } from "@/styles/layout";
 import LoadingIndicator from "@/components/common/LoadingIndicator";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useComments } from "@/graphql/hooks/useComments";
