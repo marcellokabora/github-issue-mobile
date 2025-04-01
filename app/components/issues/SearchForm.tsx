@@ -21,19 +21,21 @@ export default function SearchForm() {
     });
   }, [search, status]);
 
-  const handleFormChange = (field: string, value: string | IssueStatus) => {
+  const handleSearchChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      search: value
     }));
+  };
 
-    // If it's a status change, update the URL params
-    if (field === 'status') {
-      router.setParams({
-        search: formData.search.trim(),
-        status: value
-      });
-    }
+  const handleStatusChange = (newStatus: IssueStatus) => {
+    setFormData(prev => ({
+      ...prev,
+      status: newStatus
+    }));
+    router.setParams({
+      status: newStatus
+    });
   };
 
   const handleSubmit = () => {
@@ -50,7 +52,7 @@ export default function SearchForm() {
           style={formStyles.input}
           placeholder="Search issues..."
           value={formData.search}
-          onChangeText={(value) => handleFormChange('search', value)}
+          onChangeText={handleSearchChange}
           onSubmitEditing={handleSubmit}
           returnKeyType="search"
           testID="search-input"
@@ -69,7 +71,7 @@ export default function SearchForm() {
             layoutStyles.statusButton,
             (!formData.status || formData.status === ISSUE_STATUS.OPEN) && layoutStyles.statusButtonActive,
           ]}
-          onPress={() => handleFormChange('status', ISSUE_STATUS.OPEN)}
+          onPress={() => handleStatusChange(ISSUE_STATUS.OPEN)}
           testID={`status-button-${ISSUE_STATUS.OPEN}`}
         >
           <Text
@@ -86,7 +88,7 @@ export default function SearchForm() {
             layoutStyles.statusButton,
             formData.status === ISSUE_STATUS.CLOSED && layoutStyles.statusButtonClosed,
           ]}
-          onPress={() => handleFormChange('status', ISSUE_STATUS.CLOSED)}
+          onPress={() => handleStatusChange(ISSUE_STATUS.CLOSED)}
           testID={`status-button-${ISSUE_STATUS.CLOSED}`}
         >
           <Text
