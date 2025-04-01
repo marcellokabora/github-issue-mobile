@@ -1,6 +1,6 @@
 import { View, ActivityIndicator } from "react-native";
-import { layoutStyles } from "../../styles/layout";
-import { colors } from "../../styles/theme";
+import { layoutStyles } from "@/styles/layout";
+import { colors } from "@/styles/theme";
 
 export default function LoadingIndicator() {
     return (

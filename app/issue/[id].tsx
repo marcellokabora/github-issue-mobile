@@ -1,15 +1,14 @@
 import { View, FlatList, ActivityIndicator } from "react-native";
-import { useLocalSearchParams, Stack, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "@/graphql/queries";
 import IssueDetailsInfo from "@/components/issues/IssueDetailsInfo";
 import CommentsList from "@/components/comments/CommentsList";
-import { layoutStyles } from "@/styles/layout";
+import { layoutStyles } from "../styles/layout";
 import LoadingIndicator from "@/components/common/LoadingIndicator";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { useComments } from "@/graphql/hooks/useComments";
 import { useCallback, useEffect, useState } from "react";
-import { colors } from "@/styles/theme";
 import { IssueDetail } from "@/graphql/types/issues";
 
 type Section = {

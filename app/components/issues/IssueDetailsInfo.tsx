@@ -1,10 +1,10 @@
 import { View, Text, Image } from "react-native";
 import Markdown from "react-native-markdown-display";
-import { layoutStyles } from "../../styles/layout";
-import { textStyles } from "../../styles/typography";
-import { markdownStyles } from "../../styles/markdown";
-import { spacing } from "../../styles/theme";
-import { formatDate } from "../../utils/date";
+import { layoutStyles } from "@/styles/layout";
+import { textStyles } from "@/styles/typography";
+import { markdownStyles } from "@/styles/markdown";
+import { spacing } from "@/styles/theme";
+import { formatDate } from "@/utils/date";
 import { IssueDetail } from "@/graphql/types/issues";
 
 interface IssueDetailsInfoProps {
