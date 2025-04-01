@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import { SEARCH_ISSUES } from "../queries";
 import { PageInfo, Issue } from "../types";
-import { ISSUE_STATUS } from "@/app/utils/constants";
+import { ISSUE_STATUS } from "../../utils/constants";
 
 interface UseIssuesProps {
     search?: string;

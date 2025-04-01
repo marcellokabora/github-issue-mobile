@@ -1,8 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
-import { client } from "./graphql/apollo-client";
+import { client } from "@/graphql/apollo-client";
 import { Stack } from "expo-router";
-import { IssueProvider } from "./contexts/IssueContext";
-import IssueHeader from "./components/headers/IssueHeader";
+import { IssueProvider } from "@/contexts/IssueContext";
+import IssueHeader from "@/components/headers/IssueHeader";
 
 export default function Layout() {
   return (

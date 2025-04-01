@@ -1,17 +1,17 @@
 import { View, FlatList, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
-import { GET_ISSUE_DETAIL } from "@/graphql/queries";
-import IssueDetailsInfo from "@/components/issues/IssueDetailsInfo";
-import CommentsList from "@/components/comments/CommentsList";
-import { layoutStyles } from "@/styles/layout";
-import LoadingIndicator from "@/components/common/LoadingIndicator";
-import ErrorMessage from "@/components/common/ErrorMessage";
-import { useComments } from "@/graphql/hooks/useComments";
+import { GET_ISSUE_DETAIL } from "../graphql/queries";
+import IssueDetailsInfo from "../components/issues/IssueDetailsInfo";
+import CommentsList from "../components/comments/CommentsList";
+import { layoutStyles } from "../styles/layout";
+import LoadingIndicator from "../components/common/LoadingIndicator";
+import ErrorMessage from "../components/common/ErrorMessage";
+import { useComments } from "../graphql/hooks/useComments";
 import { useCallback, useEffect, useState } from "react";
-import { colors } from "@/styles/theme";
-import { IssueDetail } from "@/graphql/types/issues";
-import { useIssue } from "@/contexts/IssueContext";
+import { colors } from "../styles/theme";
+import { IssueDetail } from "../graphql/types/issues";
+import { useIssue } from "../contexts/IssueContext";
 
 type Section = {
   type: 'issue' | 'comments';
