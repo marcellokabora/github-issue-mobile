@@ -11,11 +11,6 @@ export const layoutStyles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
     header: {
         padding: spacing.base,
     },
@@ -23,14 +18,6 @@ export const layoutStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-start",
-    },
-    headerCenter: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    headerContent: {
-        flex: 1,
-        marginRight: spacing.base,
     },
     headerBorder: {
         borderBottomWidth: 1,
@@ -43,9 +30,6 @@ export const layoutStyles = StyleSheet.create({
     footer: {
         padding: spacing.base,
         alignItems: "center",
-    },
-    list: {
-        padding: spacing.base,
     },
     item: {
         padding: spacing.base,
@@ -60,10 +44,6 @@ export const layoutStyles = StyleSheet.create({
     },
     itemBody: {
         marginTop: spacing.sm,
-    },
-    statusContainer: {
-        flexDirection: "row",
-        marginBottom: spacing.sm,
     },
     statusButton: {
         flex: 1,

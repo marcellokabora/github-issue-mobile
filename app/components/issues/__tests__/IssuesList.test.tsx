@@ -106,14 +106,11 @@ describe('IssuesList', () => {
 
         const { getByText } = render(<IssuesList />);
 
-        // Check if issues are rendered
         expect(getByText('#1')).toBeTruthy();
         expect(getByText('Test Issue 1')).toBeTruthy();
         expect(getByText('#2')).toBeTruthy();
         expect(getByText('Test Issue 2')).toBeTruthy();
 
-        // Check if load more button is present
-        expect(getByText('Load More')).toBeTruthy();
     });
 
     it('navigates to issue detail when pressing an issue', () => {
@@ -139,26 +136,6 @@ describe('IssuesList', () => {
         });
     });
 
-    it('loads more issues when load more button is pressed', () => {
-        const mockLoadMore = jest.fn();
-        (useIssues as jest.Mock).mockReturnValue({
-            issues: mockIssues,
-            loading: false,
-            error: null,
-            pageInfo: { hasNextPage: true },
-            isLoadingMore: false,
-            loadMore: mockLoadMore,
-            flatListRef: { current: null },
-        });
-
-        const { getByText } = render(<IssuesList />);
-
-        // Press load more button
-        fireEvent.press(getByText('Load More'));
-
-        // Check if loadMore was called
-        expect(mockLoadMore).toHaveBeenCalled();
-    });
 
     it('shows loading indicator when loading more issues', () => {
         (useIssues as jest.Mock).mockReturnValue({

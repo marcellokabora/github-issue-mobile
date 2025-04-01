@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Pressable } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Issue } from "../../graphql/types";
 import { formatDate } from "../../utils/date";
@@ -7,7 +7,6 @@ import LoadingIndicator from "../common/LoadingIndicator";
 import ErrorMessage from "../common/ErrorMessage";
 import { layoutStyles } from "../../styles/layout";
 import { textStyles } from "../../styles/typography";
-import { buttonStyles } from "../../styles/components";
 import { colors } from "../../styles/theme";
 
 export default function IssuesList() {
@@ -53,27 +52,19 @@ export default function IssuesList() {
 
     return (
       <View style={layoutStyles.footer}>
-        {isLoadingMore ? (
+        {isLoadingMore &&
           <ActivityIndicator
             size="small"
             color={colors.primary}
             testID="loading-more-indicator"
           />
-        ) : (
-          <TouchableOpacity
-            style={[buttonStyles.base, buttonStyles.secondary]}
-            onPress={loadMore}
-            testID="load-more-button"
-          >
-            <Text style={[buttonStyles.text, buttonStyles.textSecondary]}>Load More</Text>
-          </TouchableOpacity>
-        )}
+        }
       </View>
     );
   };
 
   if (loading && issues.length === 0) {
-    return <LoadingIndicator testID="loading-indicator" />;
+    return <LoadingIndicator />;
   }
 
   if (error) {

@@ -1,5 +1,5 @@
-import { View, FlatList } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { View, FlatList, ActivityIndicator } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@apollo/client";
 import { GET_ISSUE_DETAIL } from "../graphql/queries";
 import IssueDetailsInfo from "../components/issues/IssueDetailsInfo";
@@ -8,28 +8,20 @@ import { layoutStyles } from "../styles/layout";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import ErrorMessage from "../components/common/ErrorMessage";
 import { useComments } from "../graphql/hooks/useComments";
-import { useCallback, useEffect } from "react";
-import { Comment } from "../graphql/types";
+import { useCallback, useEffect, useState } from "react";
+import { colors } from "../styles/theme";
+import { IssueDetail } from "../graphql/types/issues";
+import { useIssue } from "../contexts/IssueContext";
 
-interface IssueDetail {
-  id: string;
-  title: string;
-  body: string;
-  state: string;
-  number: number;
-  createdAt: string;
-  author: {
-    login: string;
-    avatarUrl: string;
-  };
-}
-
-type ListItem = IssueDetail | Array<{ node: Comment }>;
+type Section = {
+  type: 'issue' | 'comments';
+};
 
 export default function IssueDetailScreen() {
   const { id } = useLocalSearchParams();
-  const router = useRouter();
+  const { setIssue } = useIssue();
   const issueNumber = parseInt(id as string);
+  const [showComments, setShowComments] = useState(false);
 
   const { loading, error, data } = useQuery(GET_ISSUE_DETAIL, {
     variables: {
@@ -40,6 +32,12 @@ export default function IssueDetailScreen() {
     skip: !issueNumber,
   });
 
+  useEffect(() => {
+    if (data?.repository?.issue) {
+      setIssue(data.repository.issue);
+    }
+  }, [data?.repository?.issue]);
+
   const {
     comments,
     pageInfo,
@@ -48,17 +46,15 @@ export default function IssueDetailScreen() {
     totalCount
   } = useComments(issueNumber);
 
-  useEffect(() => {
-    if (data?.repository?.issue) {
-      router.setParams({ issue: data.repository.issue });
-    }
-  }, [data?.repository?.issue]);
-
   const handleEndReached = useCallback(() => {
+    if (!showComments) {
+      setShowComments(true);
+      return;
+    }
     if (!isLoadingMore && pageInfo?.hasNextPage) {
       loadMoreComments();
     }
-  }, [isLoadingMore, pageInfo?.hasNextPage, loadMoreComments]);
+  }, [isLoadingMore, pageInfo?.hasNextPage, loadMoreComments, showComments]);
 
   if (loading && !data) {
     return <LoadingIndicator />;
@@ -75,35 +71,43 @@ export default function IssueDetailScreen() {
   }
 
   const renderFooter = () => {
-    if (!pageInfo?.hasNextPage) return null;
-    return (
-      <View style={[layoutStyles.footer, { paddingVertical: 16 }]}>
-        {isLoadingMore ? <LoadingIndicator /> : null}
-      </View>
-    );
-  };
-
-  const renderItem = ({ item, index }: { item: ListItem; index: number }) => {
-    if (index === 0) {
-      return <IssueDetailsInfo issue={item as IssueDetail} />;
+    if ((!showComments || isLoadingMore) && (!pageInfo || pageInfo.hasNextPage)) {
+      return (
+        <View style={[layoutStyles.footer, { paddingVertical: 16 }]}>
+          <ActivityIndicator
+            size="small"
+            color={colors.primary}
+            testID="loading-more-indicator"
+          />
+        </View>
+      );
     }
-    return <CommentsList comments={item as Array<{ node: Comment }>} totalCount={totalCount} />;
+    return null;
   };
 
-  const listData: ListItem[] = [issue, comments];
+  const renderItem = ({ item }: { item: Section }) => {
+    if (item.type === 'issue') {
+      return <IssueDetailsInfo issue={issue} />;
+    }
+    if (item.type === 'comments' && showComments) {
+      return <CommentsList comments={comments} totalCount={totalCount} />;
+    }
+    return null;
+  };
+
+  const sections: Section[] = [
+    { type: 'issue' },
+    { type: 'comments' }
+  ];
 
   return (
     <FlatList
-      data={listData}
+      data={sections}
       renderItem={renderItem}
-      keyExtractor={(_, index) => index.toString()}
+      keyExtractor={(item) => item.type}
       ListFooterComponent={renderFooter}
       onEndReached={handleEndReached}
       onEndReachedThreshold={0.2}
-      removeClippedSubviews={true}
-      maxToRenderPerBatch={5}
-      windowSize={5}
-      initialNumToRender={5}
     />
   );
 }

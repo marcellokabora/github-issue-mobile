@@ -6,9 +6,10 @@ import { layoutStyles } from "./styles/layout";
 import { textStyles } from "./styles/typography";
 import { colors, spacing } from "./styles/theme";
 import { Ionicons } from '@expo/vector-icons';
+import { IssueProvider, useIssue } from "./contexts/IssueContext";
 
-function IssueHeader({ route, navigation }: any) {
-  const issue = route.params?.issue;
+function IssueHeader({ navigation }: any) {
+  const { issue } = useIssue();
 
   return (
     <View style={layoutStyles.navHeader}>
@@ -19,8 +20,9 @@ function IssueHeader({ route, navigation }: any) {
         <Ionicons name="arrow-back" size={24} color={colors.text.primary} />
       </TouchableOpacity>
       <View>
-        <Text style={textStyles.title}>Issue
-          {issue && (
+        {issue && (
+          <Text style={textStyles.title}>
+            Issue #{issue.number}
             <View style={[
               layoutStyles.statusBadge,
               { marginHorizontal: spacing.sm },
@@ -30,31 +32,32 @@ function IssueHeader({ route, navigation }: any) {
                 {issue.state}
               </Text>
             </View>
-          )}
-          #{issue?.number || ''}
-        </Text>
+          </Text>
+        )}
       </View>
-    </View >
+    </View>
   );
 }
 
 export default function Layout() {
   return (
     <ApolloProvider client={client}>
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="issue/[id]"
-          options={{
-            header: IssueHeader,
-          }}
-        />
-      </Stack>
+      <IssueProvider>
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="issue/[id]"
+            options={{
+              header: IssueHeader,
+            }}
+          />
+        </Stack>
+      </IssueProvider>
     </ApolloProvider>
   );
 }
