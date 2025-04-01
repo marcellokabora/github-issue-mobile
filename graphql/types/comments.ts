@@ -8,10 +8,6 @@ export interface Comment {
     createdAt: string;
 }
 
-export interface CommentsListProps {
-    issueNumber: number;
-}
-
 export interface CommentsData {
     repository: {
         issue: {

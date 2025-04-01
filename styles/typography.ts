@@ -26,6 +26,11 @@ export const textStyles = StyleSheet.create({
         textAlign: "center",
         marginTop: spacing.base,
     },
+    errorText: {
+        fontSize: typography.sizes.sm,
+        color: colors.error,
+        marginTop: spacing.xs,
+    },
     empty: {
         fontSize: typography.sizes["2xl"],
         fontWeight: typography.weights.bold,

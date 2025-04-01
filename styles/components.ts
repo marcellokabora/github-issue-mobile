@@ -50,9 +50,17 @@ export const formStyles = StyleSheet.create({
         color: colors.text.primary,
         backgroundColor: colors.background.secondary,
     },
+    inputError: {
+        borderColor: colors.error,
+        backgroundColor: colors.background.primary,
+    },
+    inputContainer: {
+        flex: 1,
+        marginRight: spacing.sm,
+    },
     searchContainer: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         marginBottom: spacing.base,
     },
 }); 

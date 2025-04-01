@@ -58,7 +58,7 @@ export const useComments = (issueNumber: number): UseCommentsReturn => {
             }
         } catch (error) {
             console.error('Error loading more comments:', error);
-            // You might want to show a toast or error message to the user here
+            // Show a toast or error message to the user here
         } finally {
             setIsLoadingMore(false);
         }

@@ -24,19 +24,17 @@ export const useIssues = ({ search = "", status = ISSUE_STATUS.OPEN }: UseIssues
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const flatListRef = useRef(null);
 
-    // Base query parts
     const baseQuery = "repo:facebook/react-native is:issue";
     const stateQuery = (!status || status === ISSUE_STATUS.OPEN) ? "state:open" : "state:closed";
     const sortQuery = "sort:created-desc";
 
-    // Construct the complete query
     const query = search
-        ? `${baseQuery} ${search} ${stateQuery} ${sortQuery}`
+        ? `${baseQuery} ${search} in:title,body -in:comments ${stateQuery} ${sortQuery}`
         : `${baseQuery} ${stateQuery} ${sortQuery}`;
 
     useEffect(() => {
         if (flatListRef.current && 'scrollToOffset' in flatListRef.current) {
-            (flatListRef.current as any).scrollToOffset({ offset: 0, animated: false });
+            (flatListRef.current as any).scrollToOffset({ offset: 0 });
         }
     }, [search, status]);
 
@@ -83,7 +81,7 @@ export const useIssues = ({ search = "", status = ISSUE_STATUS.OPEN }: UseIssues
             }
         } catch (error) {
             console.error("Error loading more issues:", error);
-            // You might want to show a toast or error message to the user here
+            // Show a toast or error message to the user here
         } finally {
             setIsLoadingMore(false);
         }

@@ -9,6 +9,7 @@ import { textStyles } from "@/styles/typography";
 export default function SearchForm() {
   const router = useRouter();
   const { search, status } = useLocalSearchParams();
+  const [searchError, setSearchError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     search: search as string || "",
     status: status as IssueStatus || ISSUE_STATUS.OPEN
@@ -21,11 +22,19 @@ export default function SearchForm() {
     });
   }, [search, status]);
 
+  const validateGitHubSearch = (searchTerm: string): boolean => {
+    const qualifierPattern = /[a-z]+:/i;
+    return !qualifierPattern.test(searchTerm);
+  };
+
   const handleSearchChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
       search: value
     }));
+
+    // Clear error when user starts typing
+    setSearchError(null);
   };
 
   const handleStatusChange = (newStatus: IssueStatus) => {
@@ -39,24 +48,40 @@ export default function SearchForm() {
   };
 
   const handleSubmit = () => {
+    const searchTerm = formData.search.trim();
+    setSearchError(null);
+
+    if (searchTerm && !validateGitHubSearch(searchTerm)) {
+      setSearchError('Search qualifiers (e.g., repo:, org:, etc.) are not allowed');
+      return;
+    }
+
     router.setParams({
-      search: formData.search.trim(),
+      search: searchTerm,
       status: formData.status
     });
   };
 
   return (
     <View style={formStyles.container}>
+      <Text style={[textStyles.title, layoutStyles.itemHeader]}>React Native Issues</Text>
       <View style={formStyles.searchContainer}>
-        <TextInput
-          style={formStyles.input}
-          placeholder="Search issues..."
-          value={formData.search}
-          onChangeText={handleSearchChange}
-          onSubmitEditing={handleSubmit}
-          returnKeyType="search"
-          testID="search-input"
-        />
+        <View style={formStyles.inputContainer}>
+          <TextInput
+            style={[formStyles.input, searchError && formStyles.inputError]}
+            placeholder="Search..."
+            value={formData.search}
+            onChangeText={handleSearchChange}
+            onSubmitEditing={handleSubmit}
+            returnKeyType="search"
+            testID="search-input"
+          />
+          {searchError && (
+            <Text style={textStyles.errorText}>
+              {searchError}
+            </Text>
+          )}
+        </View>
         <TouchableOpacity
           style={[buttonStyles.base, buttonStyles.primary]}
           onPress={handleSubmit}
