@@ -23,8 +23,15 @@ export default function SearchForm() {
   }, [search, status]);
 
   const validateGitHubSearch = (searchTerm: string): boolean => {
-    const qualifierPattern = /[a-z]+:/i;
-    return !qualifierPattern.test(searchTerm);
+    // Block repo:, org:, and status: qualifiers
+    const blockedQualifiers = ['repo:', 'org:', 'status:'];
+
+    // Check if the search term contains any blocked qualifiers
+    const hasBlockedQualifier = blockedQualifiers.some(qualifier =>
+      searchTerm.toLowerCase().includes(qualifier)
+    );
+
+    return !hasBlockedQualifier;
   };
 
   const handleSearchChange = (value: string) => {
@@ -52,7 +59,7 @@ export default function SearchForm() {
     setSearchError(null);
 
     if (searchTerm && !validateGitHubSearch(searchTerm)) {
-      setSearchError('Search qualifiers (e.g., repo:, org:, etc.) are not allowed');
+      setSearchError('Cannot use repo:, org:, or status: qualifiers in search');
       return;
     }
 
@@ -64,7 +71,7 @@ export default function SearchForm() {
 
   return (
     <View style={formStyles.container}>
-      <Text style={[textStyles.title, layoutStyles.itemHeader]}>React Native Issues</Text>
+      <Text style={[textStyles.title, layoutStyles.itemHeader]}>GitHub ReactNative Issues</Text>
       <View style={formStyles.searchContainer}>
         <View style={formStyles.inputContainer}>
           <TextInput

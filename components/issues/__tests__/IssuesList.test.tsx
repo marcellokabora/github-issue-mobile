@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import IssuesList from '../IssuesList';
-import { useIssues } from '../../../graphql/hooks/useIssues';
+import { useIssues } from '@/graphql/hooks/useIssues';
 
 // Mock the expo-router hooks
 jest.mock('expo-router', () => ({

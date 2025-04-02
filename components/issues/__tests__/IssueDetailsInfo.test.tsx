@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import IssueDetailsInfo from '../IssueDetailsInfo';
-import { formatDate } from '../../../utils/date';
+import { formatDate } from '@/utils/date';
 
 describe('IssueDetailsInfo', () => {
     const mockIssue = {

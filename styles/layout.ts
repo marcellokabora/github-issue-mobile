@@ -60,17 +60,6 @@ export const layoutStyles = StyleSheet.create({
         backgroundColor: colors.error,
         color: colors.text.light,
     },
-    statusBadge: {
-        paddingHorizontal: spacing.sm,
-        paddingVertical: spacing.xs,
-        borderRadius: 100,
-    },
-    statusBadgeOpen: {
-        backgroundColor: colors.success,
-    },
-    statusBadgeClosed: {
-        backgroundColor: colors.error,
-    },
     statusBadgeContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -99,7 +88,6 @@ export const layoutStyles = StyleSheet.create({
     statusBadgeTextClosed: {
         color: colors.error,
     },
-    // Avatar styles
     avatarContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -113,32 +101,5 @@ export const layoutStyles = StyleSheet.create({
     },
     avatarContent: {
         flex: 1,
-    },
-    // Navigation header styles
-    navHeader: {
-        paddingHorizontal: spacing.base,
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: 56,
-        backgroundColor: colors.background.primary,
-        position: 'relative'
-    },
-    navHeaderBackButton: {
-        marginRight: spacing.base,
-        padding: spacing.sm
-    },
-    issueHeaderContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        paddingHorizontal: spacing.xl
-    },
-    issueHeaderBackButton: {
-        position: 'absolute',
-        left: spacing.base
-    },
-    issueHeaderStatusBadge: {
-        marginLeft: spacing.lg
     }
 }); 
