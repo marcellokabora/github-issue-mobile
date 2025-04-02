@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile_v1",
-    "slug": "mobile_v1",
+    "name": "github-issue-mobile",
+    "slug": "github-issue-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
